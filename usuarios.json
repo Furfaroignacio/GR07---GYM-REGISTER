@@ -3,6 +3,7 @@
         "nombre": "Ignacio",
         "apellido": "Furfaro",
         "dni": 46582373,
-        "fecha_registro": "23-09-2024"
+        "fecha_registro": "23-09-2024",
+        "rol": 2
     }
 ]
