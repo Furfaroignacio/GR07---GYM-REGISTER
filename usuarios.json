@@ -12,5 +12,12 @@
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1
+    },
+    {
+        "nombre": "Julian",
+        "apellido": "Conti",
+        "dni": 44637117,
+        "fecha_registro": "17-10-2024",
+        "rol": 2
     }
 ]
