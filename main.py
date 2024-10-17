@@ -1,158 +1,258 @@
-import tkinter as tk
-from tkinter import messagebox
-import json
 from datetime import datetime
-
-# Funciones previas adaptadas para la interfaz gráfica
-def validarRol(dni):
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarios = json.load(archivo)
-            for usuario in usuarios:
-                if usuario['dni'] == dni:
-                    return usuario['rol']
-    except FileNotFoundError:
-        return None
-
-def verPerfil(dni):
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarios = json.load(archivo)
-            for usuario in usuarios:
-                if usuario['dni'] == dni:
-                    messagebox.showinfo("Perfil", f"Nombre: {usuario['nombre']}\n"
-                                                  f"Apellido: {usuario['apellido']}\n"
-                                                  f"DNI: {usuario['dni']}\n"
-                                                  f"Fecha de registro: {usuario['fecha_registro']}\n"
-                                                  f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
-                    return
-        messagebox.showerror("Error", "Usuario no encontrado.")
-    except FileNotFoundError:
-        messagebox.showerror("Error", "No se ha encontrado el archivo de usuarios.")
-
-def editarPerfil(dni):
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarios = json.load(archivo)
-            for usuario in usuarios:
-                if usuario['dni'] == dni:
-                    ventana_editar = tk.Toplevel()
-                    ventana_editar.title("Editar Perfil")
-
-                    lbl_nombre = tk.Label(ventana_editar, text="Nombre:")
-                    lbl_nombre.pack()
-
-                    entry_nombre = tk.Entry(ventana_editar)
-                    entry_nombre.insert(0, usuario['nombre'])
-                    entry_nombre.pack()
-
-                    lbl_apellido = tk.Label(ventana_editar, text="Apellido:")
-                    lbl_apellido.pack()
-
-                    entry_apellido = tk.Entry(ventana_editar)
-                    entry_apellido.insert(0, usuario['apellido'])
-                    entry_apellido.pack()
-
-                    lbl_dni = tk.Label(ventana_editar, text="DNI:")
-                    lbl_dni.pack()
-
-                    entry_dni = tk.Entry(ventana_editar)
-                    entry_dni.insert(0, usuario['dni'])
-                    entry_dni.pack()
-
-                    btn_guardar = tk.Button(ventana_editar, text="Guardar", command=lambda: (dni, entry_nombre.get(), entry_apellido.get(), entry_dni.get()))
-                    btn_guardar.pack()
-
-                    return
-        messagebox.showerror("Error", "Usuario no encontrado.")
-    except FileNotFoundError:
-        messagebox.showerror("Error", "No se ha encontrado el archivo de usuarios.")
-
+import json
 def registrarUsuario():
-    # Aquí también puedes crear una ventana adicional para registrar un nuevo usuario
-    pass
+    # Pedir el nombre
+    nombre = input("Ingresa el nombre: ")
+    validarTexto = lambda nombre: nombre.isalpha()
+    if not validarTexto(nombre):
+        print("Nombre inválido, debe contener solo letras.")
+        return  # Volver al menú principal o terminar la función
 
-def listarMiembros():
-    # Mostrar miembros según el rol
-    pass
+    # Pedir el apellido
+    apellido = input("Ingresa el apellido: ")
+    if not validarTexto(apellido):
+        print("Apellido inválido, debe contener solo letras.")
+        return  # Volver al menú principal o terminar la función
+
+    # Pedir el DNI y validar el formato
+    try:
+        dni = int(input("Ingresa el DNI: "))
+    except ValueError:
+        print("DNI inválido, debe ser un número.")
+        return  # Volver al menú principal o terminar la función
+    
+    # Validar la longitud del DNI
+    validarDni = lambda dni: len(str(dni)) == 8
+    if not validarDni(dni):
+        print("DNI inválido, debe tener 8 dígitos.")
+        return  # Volver al menú principal o terminar la función
+
+    # Registrar la fecha actual
+    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+
+    # Abrir el archivo JSON o crear uno si no existe
+    try:
+        with open('usuarios.json', 'r') as archivo:
+            usuarioDiccionario = json.load(archivo)
+    except FileNotFoundError:
+        usuarioDiccionario = []
+
+    # Verificar si el DNI ya está registrado
+    for usuario in usuarioDiccionario:
+        if usuario["dni"] == dni:
+            print("El DNI ya está registrado.")
+            return  # Salir de la función si ya existe el DNI
+
+    # Crear el diccionario del usuario
+    usuario = {
+        "nombre": nombre,
+        "apellido": apellido,
+        "dni": dni,
+        "fecha_registro": fecha_actual,
+        "rol": 1,  # Asignar rol por defecto como usuario
+    }
+
+    # Agregar el nuevo usuario al diccionario
+    usuarioDiccionario.append(usuario)
+
+    # Guardar los datos en el archivo JSON
+    with open('usuarios.json', 'w') as archivo:
+        json.dump(usuarioDiccionario, archivo, indent=4)
+
+    print("Usuario registrado con éxito.")
+
+    # Ofrecer la opción de volver al menú o finalizar
+    opcion = input("¿Deseas volver al menú principal? (s/n): ").lower()
+    if opcion == 's':
+        return  # Vuelve al menú principal
+    elif opcion == 'n':
+        print("Registro finalizado. Adiós.")
+        exit()  # Termina el programa
+    else:
+        print("Opción inválida. Volviendo al menú principal.")
+        return  # Volver al menú si la opción es incorrecta
+    
 
 def borrarMiembro():
-    # Aquí puedes implementar la interfaz gráfica para borrar miembros
-    pass
+    dni = int(input("Ingresa el DNI del miembro a borrar: "))
+    validarDni = lambda dni: len(str(dni)) == 8
+    if validarDni(dni):
+        # ABRIMOS EL ARCHIVO JSON igual que antes
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
+
+        # Buscamos el usuario por su dni y si lo encontramos lo borramos
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == dni:
+                usuarioDiccionario.remove(usuario)
+                print("Usuario eliminado con éxito.")
+                break
+        else:
+            print("Usuario no encontrado.")
+
+        # Guardar los datos 
+        with open('usuarios.json', 'w') as archivo:
+            json.dump(usuarioDiccionario, archivo, indent=4)
+    else:
+        print("DNI inválido, debe tener 8 dígitos.")
+
+def listarMiembros():
+    rolBuscar = int(input("Que rol quiere mostrar (1 user, 2 admin): "))
+
+    # ABRIMOS EL ARCHIVO JSON
+    try:
+        with open('usuarios.json', 'r') as archivo:
+            usuarioDiccionario = json.load(archivo)
+    except FileNotFoundError:
+        usuarioDiccionario = []
+
+
+    # Mostramos los usuarios
+    for usuario in usuarioDiccionario:
+        if rolBuscar == usuario["rol"]:
+            print("Nombre: ", usuario["nombre"])
+            print("Apellido: ", usuario["apellido"])
+            print("DNI: ", usuario["dni"])
+            print("Fecha de registro: ", usuario["fecha_registro"])
+            print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
+            print("")
 
 def buscarMiembro():
-    # Aquí puedes implementar la interfaz gráfica para buscar miembros
-    pass
+    dni = int(input("Ingresa el DNI del miembro a buscar: "))
+    validarDni = lambda dni: len(str(dni)) == 8
+    validarDni(dni)
+    if validarDni(dni):
+        # ABRIMOS EL ARCHIVO JSON igual que antes
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
 
-# Funciones para el menú de Usuario y Administrador con botones
-def menuUsuario(dni):
-    ventana_usuario = tk.Toplevel()
-    ventana_usuario.title("Menú de Usuario")
+        # Buscamos el usuario por su dni igual que antes, si lo encontramos lo mostramos
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == dni:
+                print("Nombre: ", usuario["nombre"])
+                print("Apellido: ", usuario["apellido"])
+                print("DNI: ", usuario["dni"])
+                print("Fecha de registro: ", usuario["fecha_registro"])
+                break
+        else:
+            print("Usuario no encontrado.")
 
-    lbl_bienvenida = tk.Label(ventana_usuario, text=f"Bienvenido Usuario {dni}")
-    lbl_bienvenida.pack()
+        # Guardar los datos 
+        with open('usuarios.json', 'w') as archivo:
+            json.dump(usuarioDiccionario, archivo, indent=4)
+    else:
+        print("DNI inválido, debe tener 8 dígitos.")
 
-    btn_ver_perfil = tk.Button(ventana_usuario, text="Ver Perfil", command=lambda: verPerfil(dni))
-    btn_ver_perfil.pack()
+def validarRol(dni):
+    with open('usuarios.json', 'r') as archivo:
+        usuarios = json.load(archivo)
+        for usuario in usuarios:
+            if usuario['dni'] == dni:
+                return usuario['rol']
+    return None
 
-    btn_editar_perfil = tk.Button(ventana_usuario, text="Editar Perfil", command=lambda: editarPerfil(dni))
-    btn_editar_perfil.pack()
+def verPerfil(dni):
+    with open('usuarios.json', 'r') as archivo:
+        usuarios = json.load(archivo)
+        for usuario in usuarios:
+            if usuario['dni'] == dni:
+                print("Nombre: ", usuario["nombre"])
+                print("Apellido: ", usuario["apellido"])
+                print("DNI: ", usuario["dni"])
+                print("Fecha de registro: ", usuario["fecha_registro"])
+                print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
+                break
+        else:
+            print("Usuario no encontrado.")
 
-    btn_salir = tk.Button(ventana_usuario, text="Salir", command=ventana_usuario.destroy)
-    btn_salir.pack()
+def editarPerfil(dni):
+    with open('usuarios.json', 'r') as archivo:
+        usuarios = json.load(archivo)
+    
+    for usuario in usuarios:
+        if usuario['dni'] == dni:
+            print("Editar perfil:")
+            usuario['nombre'] = input(f"Nombre ({usuario['nombre']}): ") or usuario['nombre']
+            usuario['apellido'] = input(f"Apellido ({usuario['apellido']}): ") or usuario['apellido']
+            nuevo_dni = input(f"DNI ({usuario['dni']}): ")
+            usuario['dni'] = int(nuevo_dni) if nuevo_dni else usuario['dni']
+            break
+    else:
+        print("Usuario no encontrado.")
+        return
+
+    with open('usuarios.json', 'w') as archivo:
+        json.dump(usuarios, archivo, indent=4)
+    
+    print("Perfil actualizado exitosamente.")    
+
+def menuUsuario(dniRegistro):
+    print("\nBienvenido al Gimnasio")
+    opcion = -1 
+    while opcion != 0:
+        print("\nElige una opción")
+        print("1. Ver mi perfil")
+        print("2. Editar mi perfil")
+        print("0. Salir")
+
+        opcion = int(input("Introduce una opción: "))
+        
+        if opcion == 1:
+            verPerfil(dniRegistro)
+        elif opcion == 2:
+            editarPerfil(dniRegistro)
+        elif opcion == 0:
+            print("Hasta luego")
+        else:
+            print("Selecciona una opción correcta")
 
 def menuAdministrador():
-    ventana_admin = tk.Toplevel()
-    ventana_admin.title("Menú de Administrador")
+    print("\nBienvenido al sistema de registro de miembros")
+    opcion = -1 
+    while opcion != 0:
+        print("\nElige una opción")
+        print("1. Registrar miembro")
+        print("2. Lista de miembros")
+        print("3. Borrar miembro")
+        print("4. Buscar miembro")
+        print("0. Salir")
 
-    lbl_bienvenida = tk.Label(ventana_admin, text="Bienvenido Administrador")
-    lbl_bienvenida.pack()
+        opcion = int(input("Introduce una opción: "))
+        
+        if opcion == 1:
+            registrarUsuario()
+        elif opcion == 2:
+            listarMiembros()
+        elif opcion == 3:
+            borrarMiembro()
+        elif opcion == 4:
+            buscarMiembro()
+        elif opcion == 0:
+            print("Hasta luego")
+        else:
+            print("Selecciona una opción correcta")
 
-    btn_registrar = tk.Button(ventana_admin, text="Registrar Usuario", command=registrarUsuario)
-    btn_registrar.pack()
 
-    btn_listar = tk.Button(ventana_admin, text="Listar Miembros", command=listarMiembros)
-    btn_listar.pack()
-
-    btn_borrar = tk.Button(ventana_admin, text="Borrar Miembro", command=borrarMiembro)
-    btn_borrar.pack()
-
-    btn_buscar = tk.Button(ventana_admin, text="Buscar Miembro", command=buscarMiembro)
-    btn_buscar.pack()
-
-    btn_salir = tk.Button(ventana_admin, text="Salir", command=ventana_admin.destroy)
-    btn_salir.pack()
-
-# Ventana principal de inicio de sesión
-def iniciarSesion():
-    dni = int(entry_dni.get())
-    rol = validarRol(dni)
-
+def main():
+    dniRegistro = int(input("Iniciar sesión con DNI: "))
+    rol = validarRol(dniRegistro)
     if rol is None:
-        messagebox.showerror("Error", "Usuario no encontrado.")
+        print("Usuario no encontrado.")
         return
 
     if rol == 1:
-        menuUsuario(dni)
+        print("Menú de Usuario:")
+        menuUsuario(dniRegistro)
     elif rol == 2:
+        print("Menú de Administrador:")
         menuAdministrador()
     else:
-        messagebox.showerror("Error", "Rol no reconocido.")
+        print("Rol no reconocido.")
 
-# Crear la ventana principal
-ventana = tk.Tk()
-ventana.title("Sistema de Registro de Gimnasio")
-
-lbl_dni = tk.Label(ventana, text="Iniciar sesión con DNI:")
-lbl_dni.pack()
-
-entry_dni = tk.Entry(ventana)
-entry_dni.pack()
-
-btn_iniciar = tk.Button(ventana, text="Iniciar sesión", command=iniciarSesion)
-btn_iniciar.pack()
-
-btn_salir = tk.Button(ventana, text="Salir", command=ventana.quit)
-btn_salir.pack()
-
-ventana.mainloop()
+main()
