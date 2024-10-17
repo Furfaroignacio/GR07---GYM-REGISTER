@@ -1,51 +1,77 @@
 from datetime import datetime
 import json
 def registrarUsuario():
+    # Pedir el nombre
     nombre = input("Ingresa el nombre: ")
     validarTexto = lambda nombre: nombre.isalpha()
-    if validarTexto(nombre) == False:
+    if not validarTexto(nombre):
         print("Nombre inválido, debe contener solo letras.")
-        return
+        return  # Volver al menú principal o terminar la función
+
+    # Pedir el apellido
     apellido = input("Ingresa el apellido: ")
-    if validarTexto(apellido) == False:
+    if not validarTexto(apellido):
         print("Apellido inválido, debe contener solo letras.")
-        return
-    dni = int(input("Ingresa el DNI: "))
-    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+        return  # Volver al menú principal o terminar la función
+
+    # Pedir el DNI y validar el formato
+    try:
+        dni = int(input("Ingresa el DNI: "))
+    except ValueError:
+        print("DNI inválido, debe ser un número.")
+        return  # Volver al menú principal o terminar la función
+    
+    # Validar la longitud del DNI
     validarDni = lambda dni: len(str(dni)) == 8
-    if validarDni(dni):
-        # ABRIMOS EL ARCHIVO JSON
-        try:
-            with open('usuarios.json', 'r') as archivo:
-                usuarioDiccionario = json.load(archivo)
-        except FileNotFoundError:
-            usuarioDiccionario = []
-
-        # si el dni ya esta en nuestra lista de usuarios, no lo registramos
-        for usuario in usuarioDiccionario:
-            if usuario["dni"] == dni:
-                print("El DNI ya está registrado.")
-                return
-
-        # Creamos diccionario usuario
-        usuario = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "dni": dni,
-            "fecha_registro": fecha_actual,
-            "rol": 1,
-        }
-
-        # lo metemos al json
-        usuarioDiccionario.append(usuario)
-
-        # Guardar los datos 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
-
-        print("Usuario registrado con éxito.")
-    else: 
+    if not validarDni(dni):
         print("DNI inválido, debe tener 8 dígitos.")
+        return  # Volver al menú principal o terminar la función
+
+    # Registrar la fecha actual
+    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+
+    # Abrir el archivo JSON o crear uno si no existe
+    try:
+        with open('usuarios.json', 'r') as archivo:
+            usuarioDiccionario = json.load(archivo)
+    except FileNotFoundError:
+        usuarioDiccionario = []
+
+    # Verificar si el DNI ya está registrado
+    for usuario in usuarioDiccionario:
+        if usuario["dni"] == dni:
+            print("El DNI ya está registrado.")
+            return  # Salir de la función si ya existe el DNI
+
+    # Crear el diccionario del usuario
+    usuario = {
+        "nombre": nombre,
+        "apellido": apellido,
+        "dni": dni,
+        "fecha_registro": fecha_actual,
+        "rol": 1,  # Asignar rol por defecto como usuario
+    }
+
+    # Agregar el nuevo usuario al diccionario
+    usuarioDiccionario.append(usuario)
+
+    # Guardar los datos en el archivo JSON
+    with open('usuarios.json', 'w') as archivo:
+        json.dump(usuarioDiccionario, archivo, indent=4)
+
+    print("Usuario registrado con éxito.")
+
+    # Ofrecer la opción de volver al menú o finalizar
+    opcion = input("¿Deseas volver al menú principal? (s/n): ").lower()
+    if opcion == 's':
+        return  # Vuelve al menú principal
+    elif opcion == 'n':
+        print("Registro finalizado. Adiós.")
+        exit()  # Termina el programa
+    else:
+        print("Opción inválida. Volviendo al menú principal.")
+        return  # Volver al menú si la opción es incorrecta
+    
 
 def borrarMiembro():
     dni = int(input("Ingresa el DNI del miembro a borrar: "))
