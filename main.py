@@ -6,26 +6,26 @@ def registrarUsuario():
     validarTexto = lambda nombre: nombre.isalpha()
     if not validarTexto(nombre):
         print("Nombre inválido, debe contener solo letras.")
-        return  # Volver al menú principal o terminar la función
+        return  
 
     # Pedir el apellido
     apellido = input("Ingresa el apellido: ")
     if not validarTexto(apellido):
         print("Apellido inválido, debe contener solo letras.")
-        return  # Volver al menú principal o terminar la función
+        return  
 
     # Pedir el DNI y validar el formato
     try:
         dni = int(input("Ingresa el DNI: "))
     except ValueError:
         print("DNI inválido, debe ser un número.")
-        return  # Volver al menú principal o terminar la función
+        return  
     
     # Validar la longitud del DNI
     validarDni = lambda dni: len(str(dni)) == 8
     if not validarDni(dni):
         print("DNI inválido, debe tener 8 dígitos.")
-        return  # Volver al menú principal o terminar la función
+        return  
 
     # Registrar la fecha actual
     fecha_actual = datetime.now().strftime("%d-%m-%Y")
