@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-
 def registrarUsuario():
     nombre = input("Ingresa el nombre: ")
     validarTexto = lambda nombre: nombre.isalpha()
@@ -192,7 +191,7 @@ def menuAdministrador():
     opcion = -1 
     while opcion != 0:
         print("\nElige una opción")
-        print("1. Registrarse")
+        print("1. Registrar miembro")
         print("2. Lista de miembros")
         print("3. Borrar miembro")
         print("4. Buscar miembro")
