@@ -7,8 +7,8 @@
         "rol": 2
     },
     {
-        "nombre": "prueba",
-        "apellido": "prueba",
+        "nombre": "Prueba",
+        "apellido": "Prueba",
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1
