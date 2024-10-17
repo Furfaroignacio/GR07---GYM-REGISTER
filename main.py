@@ -1,31 +1,44 @@
 from datetime import datetime
 import json
 def registrarUsuario():
+    nombre_valido = False
+    apellido_valido = False
+    dni_valido = False
+    
     # Pedir el nombre
     nombre = input("Ingresa el nombre: ")
     validarTexto = lambda nombre: nombre.isalpha()
-    if not validarTexto(nombre):
-        print("Nombre inválido, debe contener solo letras.")
-        return  
+    while nombre_valido == False:
+        if validarTexto(nombre) == False:
+            print("Nombre inválido, debe contener solo letras.")
+            nombre = input("Ingresa el nombre: ")
+        else:
+            nombre_valido = True
 
     # Pedir el apellido
     apellido = input("Ingresa el apellido: ")
-    if not validarTexto(apellido):
-        print("Apellido inválido, debe contener solo letras.")
-        return  
-
+    while apellido_valido == False:
+        if validarTexto(apellido) == False:
+            print("Apellido inválido, debe contener solo letras.")
+            apellido = input("Ingresa el apellido: ")
+        else:
+            apellido_valido = True
     # Pedir el DNI y validar el formato
-    try:
-        dni = int(input("Ingresa el DNI: "))
-    except ValueError:
-        print("DNI inválido, debe ser un número.")
-        return  
-    
-    # Validar la longitud del DNI
-    validarDni = lambda dni: len(str(dni)) == 8
-    if not validarDni(dni):
-        print("DNI inválido, debe tener 8 dígitos.")
-        return  
+    dni = input("Ingresa el DNI: ")
+    while dni_valido == False:
+        try:
+            if not dni.isdigit() and len(dni) != 8:
+                raise ValueError("DNI inválido, debe contener solo números y tener 8 dígitos.")
+            if not dni.isdigit():
+                raise ValueError("DNI inválido, debe contener solo números.")
+            if len(dni) != 8:
+                raise ValueError("DNI inválido, debe tener 8 dígitos.")
+            
+            dni_valido = True
+        except ValueError as e:
+            print(e)
+            dni = input("Ingresa el DNI: ")
+    dni = int(dni)
 
     # Registrar la fecha actual
     fecha_actual = datetime.now().strftime("%d-%m-%Y")
@@ -217,13 +230,19 @@ def menuAdministrador():
     opcion = -1 
     while opcion != 0:
         print("\nElige una opción")
-        print("1. Registrar miembro")
+        print("1. Registrarse")
         print("2. Lista de miembros")
         print("3. Borrar miembro")
         print("4. Buscar miembro")
         print("0. Salir")
 
-        opcion = int(input("Introduce una opción: "))
+        opcion = input("Introduce una opción: ")
+        
+        if not opcion.isdigit():
+            print("\nPor favor, introduce un valor numérico.")
+            continue
+        
+        opcion = int(opcion)
         
         if opcion == 1:
             registrarUsuario()
