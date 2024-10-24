@@ -1,13 +1,8 @@
-import json
+import tkinter as tk
+from tkinter import messagebox
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 from user import verPerfil, editarPerfil
-
-def obtenerDNI():
-    while True:
-        dni_input = input("Iniciar sesión con DNI: ")
-        if dni_input.isdigit() and len(dni_input) == 8:
-            return int(dni_input)
-        print("DNI inválido, debe contener 8 dígitos numéricos.")
+import json
 
 def validarRol(dni):
     try:
@@ -17,77 +12,64 @@ def validarRol(dni):
                 if usuario['dni'] == dni:
                     return usuario['rol']
     except FileNotFoundError:
-        print("Archivo de usuarios no encontrado.")
+        messagebox.showerror("Error", "Archivo de usuarios no encontrado.")
     return None
 
-def menuUsuario(dniRegistro):
-    print("\nBienvenido al Gimnasio")
-    while True:
-        print("\nElige una opción:")
-        print("1. Ver mi perfil")
-        print("2. Editar mi perfil")
-        print("0. Salir")
+def iniciarSesion():
+    dni = dni_entry.get()
+    try:
+        dni = int(dni)
+    except ValueError:
+        messagebox.showerror("Error", "DNI inválido.")
+        return
 
-        opcion = input("Introduce una opción: ")
-        if not opcion.isdigit():
-            print("Selecciona una opción correcta.")
-            continue
-        
-        opcion = int(opcion)
-        if opcion == 1:
-            verPerfil(dniRegistro)
-        elif opcion == 2:
-            editarPerfil(dniRegistro)
-        elif opcion == 0:
-            print("Hasta luego")
-            break
-        else:
-            print("Selecciona una opción correcta.")
-
-def menuAdministrador():
-    print("\nBienvenido al sistema de registro de miembros")
-    while True:
-        print("\nElige una opción:")
-        print("1. Registrarse")
-        print("2. Lista de miembros")
-        print("3. Borrar miembro")
-        print("4. Buscar miembro")
-        print("0. Salir")
-
-        opcion = input("Introduce una opción: ")
-        if not opcion.isdigit():
-            print("\nPor favor, introduce un valor numérico.")
-            continue
-        
-        opcion = int(opcion)
-        if opcion == 1:
-            registrarUsuario()
-        elif opcion == 2:
-            listarMiembros()
-        elif opcion == 3:
-            borrarMiembro()
-        elif opcion == 4:
-            buscarMiembro()
-        elif opcion == 0:
-            print("Hasta luego")
-            break
-        else:
-            print("Selecciona una opción correcta.")
-
-def main():
-    dniRegistro = obtenerDNI()
-    rol = validarRol(dniRegistro)
+    rol = validarRol(dni)
     
     if rol is None:
-        print("Usuario no encontrado.")
+        messagebox.showerror("Error", "Usuario no encontrado.")
         return
 
     if rol == 1:
-        menuUsuario(dniRegistro)
+        menuUsuario(dni)
     elif rol == 2:
         menuAdministrador()
     else:
-        print("Rol no reconocido.")
+        messagebox.showerror("Error", "Rol no reconocido.")
+
+def menuUsuario(dni):
+    # Crea menú para usuarios
+    clear_window()
+    tk.Label(root, text="Menú de Usuario", font=("Helvetica", 16)).pack(pady=20)
+
+    tk.Button(root, text="Ver mi perfil", command=lambda: verPerfil(dni)).pack(pady=10)
+    tk.Button(root, text="Editar mi perfil", command=lambda: editarPerfil(dni)).pack(pady=10)
+    tk.Button(root, text="Salir", command=root.quit).pack(pady=10)
+
+def menuAdministrador():
+    # Crea menú para administradores
+    clear_window()
+    tk.Label(root, text="Menú de Administrador", font=("Helvetica", 16)).pack(pady=20)
+
+    tk.Button(root, text="Registrar usuario", command=registrarUsuario).pack(pady=10)
+    tk.Button(root, text="Listar miembros", command=listarMiembros).pack(pady=10)
+    tk.Button(root, text="Borrar miembro", command=borrarMiembro).pack(pady=10)
+    tk.Button(root, text="Buscar miembro", command=buscarMiembro).pack(pady=10)
+    tk.Button(root, text="Salir", command=root.quit).pack(pady=10)
+
+def clear_window():
+    for widget in root.winfo_children():
+        widget.destroy()
 
 if __name__ == "__main__":
-    main()
+    # Ventana principal de la aplicación
+    root = tk.Tk()
+    root.title("Sistema del Gimnasio")
+
+    # Interfaz de inicio de sesión
+    tk.Label(root, text="Bienvenido al Gimnasio", font=("Helvetica", 16)).pack(pady=20)
+    tk.Label(root, text="DNI:").pack()
+    dni_entry = tk.Entry(root)
+    dni_entry.pack(pady=10)
+    tk.Button(root, text="Iniciar sesión", command=iniciarSesion).pack(pady=10)
+
+    root.mainloop()
