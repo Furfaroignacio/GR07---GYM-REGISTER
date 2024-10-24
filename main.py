@@ -48,7 +48,7 @@ def menuAdministrador():
     print("\nBienvenido al sistema de registro de miembros")
     while True:
         print("\nElige una opción:")
-        print("1. Registrarse")
+        print("1. Registrar usuario")
         print("2. Lista de miembros")
         print("3. Borrar miembro")
         print("4. Buscar miembro")
