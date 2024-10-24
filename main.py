@@ -1,136 +1,65 @@
-from datetime import datetime
 import json
+from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
+from user import verPerfil, editarPerfil
 
-def registrarUsuario():
-    nombre = input("Ingresa el nombre: ")
-    validarTexto = lambda nombre: nombre.isalpha()
-    if validarTexto(nombre) == False:
-        print("Nombre inválido, debe contener solo letras.")
-        return
-    apellido = input("Ingresa el apellido: ")
-    if validarTexto(apellido) == False:
-        print("Apellido inválido, debe contener solo letras.")
-        return
-    dni = int(input("Ingresa el DNI: "))
-    fecha_actual = datetime.now().strftime("%d-%m-%Y")
-    validarDni = lambda dni: len(str(dni)) == 8
-    if validarDni(dni):
-        # ABRIMOS EL ARCHIVO JSON
-        try:
-            with open('usuarios.json', 'r') as archivo:
-                usuarioDiccionario = json.load(archivo)
-        except FileNotFoundError:
-            usuarioDiccionario = []
+def obtenerDNI():
+    while True:
+        dni_input = input("Iniciar sesión con DNI: ")
+        if dni_input.isdigit() and len(dni_input) == 8:
+            return int(dni_input)
+        print("DNI inválido, debe contener 8 dígitos numéricos.")
 
-        # si el dni ya esta en nuestra lista de usuarios, no lo registramos
-        for usuario in usuarioDiccionario:
-            if usuario["dni"] == dni:
-                print("El DNI ya está registrado.")
-                return
-
-        # Creamos diccionario usuario
-        usuario = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "dni": dni,
-            "fecha_registro": fecha_actual
-        }
-
-        # lo metemos al json
-        usuarioDiccionario.append(usuario)
-
-        # Guardar los datos 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
-
-        print("Usuario registrado con éxito.")
-    else: 
-        print("DNI inválido, debe tener 8 dígitos.")
-
-def borrarMiembro():
-    dni = int(input("Ingresa el DNI del miembro a borrar: "))
-    validarDni = lambda dni: len(str(dni)) == 8
-    if validarDni(dni):
-        # ABRIMOS EL ARCHIVO JSON igual que antes
-        try:
-            with open('usuarios.json', 'r') as archivo:
-                usuarioDiccionario = json.load(archivo)
-        except FileNotFoundError:
-            usuarioDiccionario = []
-
-        # Buscamos el usuario por su dni y si lo encontramos lo borramos
-        for usuario in usuarioDiccionario:
-            if usuario["dni"] == dni:
-                usuarioDiccionario.remove(usuario)
-                print("Usuario eliminado con éxito.")
-                break
-        else:
-            print("Usuario no encontrado.")
-
-        # Guardar los datos 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
-    else:
-        print("DNI inválido, debe tener 8 dígitos.")
-
-def listarMiembros():
-    # ABRIMOS EL ARCHIVO JSON
+def validarRol(dni):
     try:
         with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
+            usuarios = json.load(archivo)
+            for usuario in usuarios:
+                if usuario['dni'] == dni:
+                    return usuario['rol']
     except FileNotFoundError:
-        usuarioDiccionario = []
+        print("Archivo de usuarios no encontrado.")
+    return None
 
-    # Mostramos los usuarios
-    for usuario in usuarioDiccionario:
-        print("Nombre: ", usuario["nombre"])
-        print("Apellido: ", usuario["apellido"])
-        print("DNI: ", usuario["dni"])
-        print("Fecha de registro: ", usuario["fecha_registro"])
-        print("")
+def menuUsuario(dniRegistro):
+    print("\nBienvenido al Gimnasio")
+    while True:
+        print("\nElige una opción:")
+        print("1. Ver mi perfil")
+        print("2. Editar mi perfil")
+        print("0. Salir")
 
-def buscarMiembro():
-    dni = int(input("Ingresa el DNI del miembro a buscar: "))
-    validarDni = lambda dni: len(str(dni)) == 8
-    validarDni(dni)
-    if validarDni(dni):
-        # ABRIMOS EL ARCHIVO JSON igual que antes
-        try:
-            with open('usuarios.json', 'r') as archivo:
-                usuarioDiccionario = json.load(archivo)
-        except FileNotFoundError:
-            usuarioDiccionario = []
-
-        # Buscamos el usuario por su dni igual que antes, si lo encontramos lo mostramos
-        for usuario in usuarioDiccionario:
-            if usuario["dni"] == dni:
-                print("Nombre: ", usuario["nombre"])
-                print("Apellido: ", usuario["apellido"])
-                print("DNI: ", usuario["dni"])
-                print("Fecha de registro: ", usuario["fecha_registro"])
-                break
+        opcion = input("Introduce una opción: ")
+        if not opcion.isdigit():
+            print("Selecciona una opción correcta.")
+            continue
+        
+        opcion = int(opcion)
+        if opcion == 1:
+            verPerfil(dniRegistro)
+        elif opcion == 2:
+            editarPerfil(dniRegistro)
+        elif opcion == 0:
+            print("Hasta luego")
+            break
         else:
-            print("Usuario no encontrado.")
+            print("Selecciona una opción correcta.")
 
-        # Guardar los datos 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
-    else:
-        print("DNI inválido, debe tener 8 dígitos.")
-
-def main():
+def menuAdministrador():
     print("\nBienvenido al sistema de registro de miembros")
-    opcion = -1 
-    while opcion != 0:
-        print("\nElige una opción")
+    while True:
+        print("\nElige una opción:")
         print("1. Registrarse")
         print("2. Lista de miembros")
         print("3. Borrar miembro")
         print("4. Buscar miembro")
         print("0. Salir")
 
-        opcion = int(input("Introduce una opción: "))
+        opcion = input("Introduce una opción: ")
+        if not opcion.isdigit():
+            print("\nPor favor, introduce un valor numérico.")
+            continue
         
+        opcion = int(opcion)
         if opcion == 1:
             registrarUsuario()
         elif opcion == 2:
@@ -141,7 +70,24 @@ def main():
             buscarMiembro()
         elif opcion == 0:
             print("Hasta luego")
+            break
         else:
-            print("Selecciona una opción correcta")
+            print("Selecciona una opción correcta.")
 
-main()
+def main():
+    dniRegistro = obtenerDNI()
+    rol = validarRol(dniRegistro)
+    
+    if rol is None:
+        print("Usuario no encontrado.")
+        return
+
+    if rol == 1:
+        menuUsuario(dniRegistro)
+    elif rol == 2:
+        menuAdministrador()
+    else:
+        print("Rol no reconocido.")
+
+if __name__ == "__main__":
+    main()

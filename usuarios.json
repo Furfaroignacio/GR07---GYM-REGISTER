@@ -3,6 +3,21 @@
         "nombre": "Ignacio",
         "apellido": "Furfaro",
         "dni": 46582373,
-        "fecha_registro": "23-09-2024"
+        "fecha_registro": "23-09-2024",
+        "rol": 2
+    },
+    {
+        "nombre": "Prueba",
+        "apellido": "Prueba",
+        "dni": 12345678,
+        "fecha_registro": "17-10-2024",
+        "rol": 1
+    },
+    {
+        "nombre": "Julian",
+        "apellido": "Conti",
+        "dni": 44637117,
+        "fecha_registro": "17-10-2024",
+        "rol": 2
     }
 ]
