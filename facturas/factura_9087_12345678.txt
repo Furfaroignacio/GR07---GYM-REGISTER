@@ -1,0 +1,4 @@
+Factura para el DNI: 12345678
+Curso: Boxeo
+Total a pagar: $6000
+Fecha: 2024-10-31 09:35:46
