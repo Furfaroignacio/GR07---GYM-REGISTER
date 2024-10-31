@@ -1,8 +1,7 @@
 import json
-from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 from user import verPerfil, editarPerfil, inscribirseCurso , generarFactura
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro, gestionarMiembro
-from user import verPerfil, editarPerfil
+
 
 def obtenerDNI():
     while True:
