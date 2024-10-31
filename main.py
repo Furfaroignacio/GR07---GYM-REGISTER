@@ -1,6 +1,8 @@
 import json
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 from user import verPerfil, editarPerfil, inscribirseCurso , generarFactura
+from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro, gestionarMiembro
+from user import verPerfil, editarPerfil
 
 def obtenerDNI():
     while True:
@@ -55,6 +57,7 @@ def menuAdministrador():
         print("2. Lista de miembros")
         print("3. Borrar miembro")
         print("4. Buscar miembro")
+        print("5. Gestionar miembros")
         print("0. Salir")
 
         opcion = input("Introduce una opción: ")
@@ -71,6 +74,8 @@ def menuAdministrador():
             borrarMiembro()
         elif opcion == 4:
             buscarMiembro()
+        elif opcion == 5:
+            gestionarMiembro()
         elif opcion == 0:
             print("Hasta luego")
             break

@@ -136,3 +136,41 @@ def buscarMiembro():
             break
     else:
         print("Usuario no encontrado.")
+
+def gestionarMiembro():
+    dni = input("Ingresa el DNI del miembro a gestionar: ")
+    if not validarDNI(dni):
+        print("DNI inválido, debe tener 8 dígitos.")
+        return
+    dni = int(dni)
+    
+    try:
+        with open('usuarios.json', 'r') as archivo:
+            usuarioDiccionario = json.load(archivo)
+    except FileNotFoundError:
+        usuarioDiccionario = []
+
+    for usuario in usuarioDiccionario:
+        if usuario["dni"] == dni:
+            print("Nombre: ", usuario["nombre"])
+            print("Apellido: ", usuario["apellido"])
+            print("DNI: ", usuario["dni"])
+            print("Fecha de registro: ", usuario["fecha_registro"])
+            print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
+            print("")
+
+            nuevoRol = input("Ingresa el nuevo rol (1 para usuario, 2 para admin): ")
+            if not nuevoRol.isdigit() or nuevoRol not in ['1', '2']:
+                print("Rol inválido. Debe ser 1 o 2.")
+                return
+            nuevoRol = int(nuevoRol)
+
+            usuario["rol"] = nuevoRol
+
+            with open('usuarios.json', 'w') as archivo:
+                json.dump(usuarioDiccionario, archivo, indent=4)
+
+            print("Rol actualizado con éxito.")
+            break
+    else:
+        print("Usuario no encontrado.")
