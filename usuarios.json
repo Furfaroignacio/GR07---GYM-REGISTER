@@ -11,7 +11,17 @@
         "apellido": "Prueba",
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
-        "rol": 1
+        "rol": 1,
+        "cursos_inscritos": [
+            [
+                "Crossfit",
+                50
+            ],
+            [
+                "Entrenamiento Funcional",
+                45
+            ]
+        ]
     },
     {
         "nombre": "Julian",

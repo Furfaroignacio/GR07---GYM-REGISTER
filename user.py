@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import random
 
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
@@ -19,6 +20,7 @@ def verPerfil(dni):
                 print("DNI: ", usuario["dni"])
                 print("Fecha de registro: ", usuario["fecha_registro"])
                 print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
+                print(f"Cursos inscritos: {', '.join([curso[0] for curso in usuario.get('cursos_inscritos', [])])}")
                 break
         else:
             print("Usuario no encontrado.")
@@ -57,3 +59,65 @@ def editarPerfil(dni):
         json.dump(usuarios, archivo, indent=4)
     
     print("Perfil actualizado exitosamente.")
+
+def inscribirseCurso(dni):
+    # Curso, costo matriz
+    cursos = [
+        ["Crossfit", 7000],
+        ["Yoga", 3000],
+        ["Entrenamiento Funcional", 7000],
+        ["Pilates", 4000],
+        ["Boxeo", 6000],
+        ["Spinning", 3500],
+        ["Zumba", 2500]
+    ]
+    
+    print("Cursos disponibles:")
+    for i, curso in enumerate(cursos):
+        print(f"{i + 1}. {curso[0]} - ${curso[1]}")
+
+    opcion = input("Selecciona el número del curso al que deseas inscribirte: ")
+    
+    if not opcion.isdigit() or int(opcion) not in range(1, len(cursos) + 1):
+        print("Selección inválida.")
+        return
+    
+    curso_seleccionado = cursos[int(opcion) - 1]
+    print(f"Te has inscrito en {curso_seleccionado[0]}. Generando factura...")
+
+    generarFactura(dni, curso_seleccionado)  
+    agregarCursoAlPerfil(dni, curso_seleccionado)
+    
+def generarFactura(dni, curso):
+    n = random.randint(1000, 9999)
+    """Genera una factura en un archivo .txt"""
+    with open(f"facturas/factura_{n}_{dni}.txt", 'w') as factura:
+        factura.write(f"Factura para el DNI: {dni}\n")
+        factura.write(f"Curso: {curso[0]}\n")  #nombre
+        factura.write(f"Total a pagar: ${curso[1]}\n")  #costo
+        factura.write(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    
+    print(f"Factura generada: factura_{dni}.txt")
+
+
+def agregarCursoAlPerfil(dni, curso):
+    """Agrega el curso seleccionado al perfil del usuario en el archivo JSON en formato de matriz."""
+    with open('usuarios.json', 'r') as archivo:
+        usuarios = json.load(archivo)
+
+    for usuario in usuarios:
+        if usuario['dni'] == dni:
+            if 'cursos_inscritos' not in usuario:
+                usuario['cursos_inscritos'] = []
+            # agregar el curso como una lista [nombre, costo]
+            usuario['cursos_inscritos'].append([curso[0], curso[1]])
+            break
+    else:
+        print("Usuario no encontrado.")
+        return
+
+    with open('usuarios.json', 'w') as archivo:
+        json.dump(usuarios, archivo, indent=4)
+
+    print(f"El curso {curso[0]} ha sido agregado a tu perfil.")
+
