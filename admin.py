@@ -1,4 +1,6 @@
 import json
+import tkinter as tk
+from tkinter import messagebox
 from datetime import datetime
 
 def validarTexto(texto):
@@ -7,170 +9,163 @@ def validarTexto(texto):
 
 def validarDNI(dni):
     """Valida que el DNI sea un número de 8 dígitos."""
-    return str(dni).isdigit() and len(str(dni)) == 8
+    return dni.isdigit() and len(dni) == 8
 
 def registrarUsuario():
-    nombre = input("Ingresa el nombre: ")
-    while not validarTexto(nombre):
-        print("Nombre inválido, debe contener solo letras.")
-        nombre = input("Ingresa el nombre: ")
+    def guardarUsuario():
+        nombre = entry_nombre.get()
+        apellido = entry_apellido.get()
+        dni = entry_dni.get()
 
-    apellido = input("Ingresa el apellido: ")
-    while not validarTexto(apellido):
-        print("Apellido inválido, debe contener solo letras.")
-        apellido = input("Ingresa el apellido: ")
+        if not validarTexto(nombre) or not validarTexto(apellido):
+            messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
+            return
+        if not validarDNI(dni):
+            messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
+            return
+        
+        fecha_actual = datetime.now().strftime("%d-%m-%Y")
+        
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
 
-    dni = input("Ingresa el DNI: ")
-    while not validarDNI(dni):
-        print("DNI inválido, debe contener solo números y tener 8 dígitos.")
-        dni = input("Ingresa el DNI: ")
-    dni = int(dni)
+        if any(usuario["dni"] == int(dni) for usuario in usuarioDiccionario):
+            messagebox.showinfo("Info", "El DNI ya está registrado.")
+            return
 
-    # Registrar la fecha actual
-    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+        usuario = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "dni": int(dni),
+            "fecha_registro": fecha_actual,
+            "rol": 1
+        }
 
-    # Abrir el archivo JSON o crear uno si no existe
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
-    except FileNotFoundError:
-        usuarioDiccionario = []
+        usuarioDiccionario.append(usuario)
 
-    # Verificar si el DNI ya está registrado
-    if any(usuario["dni"] == dni for usuario in usuarioDiccionario):
-        print("El DNI ya está registrado.")
-        return  # Salir de la función si ya existe el DNI
+        with open('usuarios.json', 'w') as archivo:
+            json.dump(usuarioDiccionario, archivo, indent=4)
 
-    # Crear el diccionario del usuario
-    usuario = {
-        "nombre": nombre,
-        "apellido": apellido,
-        "dni": dni,
-        "fecha_registro": fecha_actual,
-        "rol": 1,  # Asignar rol por defecto como usuario
-    }
+        messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
+        ventana_registro.destroy()
 
-    # Agregar el nuevo usuario al diccionario
-    usuarioDiccionario.append(usuario)
+    ventana_registro = tk.Toplevel()
+    ventana_registro.title("Registrar Usuario")
 
-    # Guardar los datos en el archivo JSON
-    with open('usuarios.json', 'w') as archivo:
-        json.dump(usuarioDiccionario, archivo, indent=4)
+    tk.Label(ventana_registro, text="Nombre:").grid(row=0, column=0)
+    entry_nombre = tk.Entry(ventana_registro)
+    entry_nombre.grid(row=0, column=1)
 
-    print("Usuario registrado con éxito.")
+    tk.Label(ventana_registro, text="Apellido:").grid(row=1, column=0)
+    entry_apellido = tk.Entry(ventana_registro)
+    entry_apellido.grid(row=1, column=1)
 
-    # Ofrecer la opción de volver al menú o finalizar
-    opcion = input("¿Deseas volver al menú principal? (s/n): ").lower()
-    if opcion == 'n':
-        print("Registro finalizado. Adiós.")
-        exit()  # Termina el programa
-    else:
-        print("Volviendo al menú principal...")
+    tk.Label(ventana_registro, text="DNI:").grid(row=2, column=0)
+    entry_dni = tk.Entry(ventana_registro)
+    entry_dni.grid(row=2, column=1)
+
+    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=3, column=0, columnspan=2)
 
 def borrarMiembro():
-    dni = input("Ingresa el DNI del miembro a borrar: ")
-    if not validarDNI(dni):
-        print("DNI inválido, debe tener 8 dígitos.")
-        return
-    dni = int(dni)
+    def borrar():
+        dni = entry_dni.get()
+        if not validarDNI(dni):
+            messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
+            return
+        
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
 
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
-    except FileNotFoundError:
-        usuarioDiccionario = []
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == int(dni):
+                usuarioDiccionario.remove(usuario)
+                with open('usuarios.json', 'w') as archivo:
+                    json.dump(usuarioDiccionario, archivo, indent=4)
+                messagebox.showinfo("Éxito", "Usuario eliminado con éxito.")
+                ventana_borrar.destroy()
+                return
 
-    for usuario in usuarioDiccionario:
-        if usuario["dni"] == dni:
-            usuarioDiccionario.remove(usuario)
-            print("Usuario eliminado con éxito.")
-            break
-    else:
-        print("Usuario no encontrado.")
+        messagebox.showinfo("Info", "Usuario no encontrado.")
+        ventana_borrar.destroy()
 
-    with open('usuarios.json', 'w') as archivo:
-        json.dump(usuarioDiccionario, archivo, indent=4)
+    ventana_borrar = tk.Toplevel()
+    ventana_borrar.title("Borrar Miembro")
+
+    tk.Label(ventana_borrar, text="DNI del miembro a borrar:").pack()
+    entry_dni = tk.Entry(ventana_borrar)
+    entry_dni.pack()
+    tk.Button(ventana_borrar, text="Borrar", command=borrar).pack()
 
 def listarMiembros():
-    rolBuscar = input("¿Qué rol quieres mostrar (1 para usuario, 2 para admin)? ")
-    if not rolBuscar.isdigit() or rolBuscar not in ['1', '2']:
-        print("Rol inválido. Debe ser 1 o 2.")
-        return
+    def mostrarLista():
+        rol = entry_rol.get()
+        if rol not in ['1', '2']:
+            messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
+            return
+        
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
 
-    rolBuscar = int(rolBuscar)
+        for usuario in usuarioDiccionario:
+            if int(rol) == usuario["rol"]:
+                lista_usuarios.insert(tk.END, f"Nombre: {usuario['nombre']}")
+                lista_usuarios.insert(tk.END, f"Apellido: {usuario['apellido']}")
+                lista_usuarios.insert(tk.END, f"DNI: {usuario['dni']}")
+                lista_usuarios.insert(tk.END, f"Fecha de registro: {usuario['fecha_registro']}")
+                lista_usuarios.insert(tk.END, f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
+                lista_usuarios.insert(tk.END, "")
 
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
-    except FileNotFoundError:
-        usuarioDiccionario = []
+    ventana_listar = tk.Toplevel()
+    ventana_listar.title("Listar Miembros")
 
-    for usuario in usuarioDiccionario:
-        if rolBuscar == usuario["rol"]:
-            print("Nombre: ", usuario["nombre"])
-            print("Apellido: ", usuario["apellido"])
-            print("DNI: ", usuario["dni"])
-            print("Fecha de registro: ", usuario["fecha_registro"])
-            print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
-            print("")
+    tk.Label(ventana_listar, text="Rol (1 para usuario, 2 para admin):").pack()
+    entry_rol = tk.Entry(ventana_listar)
+    entry_rol.pack()
+
+    lista_usuarios = tk.Listbox(ventana_listar, width=50)
+    lista_usuarios.pack()
+
+    tk.Button(ventana_listar, text="Mostrar", command=mostrarLista).pack()
 
 def buscarMiembro():
-    dni = input("Ingresa el DNI del miembro a buscar: ")
-    if not validarDNI(dni):
-        print("DNI inválido, debe tener 8 dígitos.")
-        return
-    dni = int(dni)
+    def buscar():
+        dni = entry_dni.get()
+        if not validarDNI(dni):
+            messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
+            return
 
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
-    except FileNotFoundError:
-        usuarioDiccionario = []
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                usuarioDiccionario = json.load(archivo)
+        except FileNotFoundError:
+            usuarioDiccionario = []
 
-    for usuario in usuarioDiccionario:
-        if usuario["dni"] == dni:
-            print("Nombre: ", usuario["nombre"])
-            print("Apellido: ", usuario["apellido"])
-            print("DNI: ", usuario["dni"])
-            print("Fecha de registro: ", usuario["fecha_registro"])
-            break
-    else:
-        print("Usuario no encontrado.")
-
-def gestionarMiembro():
-    dni = input("Ingresa el DNI del miembro a gestionar: ")
-    if not validarDNI(dni):
-        print("DNI inválido, debe tener 8 dígitos.")
-        return
-    dni = int(dni)
-    
-    try:
-        with open('usuarios.json', 'r') as archivo:
-            usuarioDiccionario = json.load(archivo)
-    except FileNotFoundError:
-        usuarioDiccionario = []
-
-    for usuario in usuarioDiccionario:
-        if usuario["dni"] == dni:
-            print("Nombre: ", usuario["nombre"])
-            print("Apellido: ", usuario["apellido"])
-            print("DNI: ", usuario["dni"])
-            print("Fecha de registro: ", usuario["fecha_registro"])
-            print(f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
-            print("")
-
-            nuevoRol = input("Ingresa el nuevo rol (1 para usuario, 2 para admin): ")
-            if not nuevoRol.isdigit() or nuevoRol not in ['1', '2']:
-                print("Rol inválido. Debe ser 1 o 2.")
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == int(dni):
+                messagebox.showinfo("Resultado", 
+                                    f"Nombre: {usuario['nombre']}\n"
+                                    f"Apellido: {usuario['apellido']}\n"
+                                    f"DNI: {usuario['dni']}\n"
+                                    f"Fecha de registro: {usuario['fecha_registro']}")
+                ventana_buscar.destroy()
                 return
-            nuevoRol = int(nuevoRol)
 
-            usuario["rol"] = nuevoRol
+        messagebox.showinfo("Info", "Usuario no encontrado.")
+        ventana_buscar.destroy()
 
-            with open('usuarios.json', 'w') as archivo:
-                json.dump(usuarioDiccionario, archivo, indent=4)
+    ventana_buscar = tk.Toplevel()
+    ventana_buscar.title("Buscar Miembro")
 
-            print("Rol actualizado con éxito.")
-            break
-    else:
-        print("Usuario no encontrado.")
+    tk.Label(ventana_buscar, text="DNI del miembro a buscar:").pack()
+    entry_dni = tk.Entry(ventana_buscar)
+    entry_dni.pack()
+    tk.Button(ventana_buscar, text="Buscar", command=buscar).pack()
