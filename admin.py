@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
 
+# Validaciones básicas
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
     return texto.isalpha()
@@ -11,6 +12,16 @@ def validarDNI(dni):
     """Valida que el DNI sea un número de 8 dígitos."""
     return dni.isdigit() and len(dni) == 8
 
+def verificarArchivoUsuarios():
+    """Crea el archivo `usuarios.json` si no existe."""
+    try:
+        with open('usuarios.json', 'r') as archivo:
+            pass
+    except FileNotFoundError:
+        with open('usuarios.json', 'w') as archivo:
+            json.dump([], archivo)
+
+# Registrar un nuevo usuario
 def registrarUsuario():
     def guardarUsuario():
         nombre = entry_nombre.get()
@@ -24,7 +35,7 @@ def registrarUsuario():
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
         
-        fecha_actual = datetime.now().strftime("%d-%m-%Y")
+        verificarArchivoUsuarios()
         
         try:
             with open('usuarios.json', 'r') as archivo:
@@ -40,8 +51,8 @@ def registrarUsuario():
             "nombre": nombre,
             "apellido": apellido,
             "dni": int(dni),
-            "fecha_registro": fecha_actual,
-            "rol": 1
+            "fecha_registro": datetime.now().strftime("%d-%m-%Y"),
+            "rol": 1  # Por defecto es usuario
         }
 
         usuarioDiccionario.append(usuario)
@@ -69,12 +80,15 @@ def registrarUsuario():
 
     tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=3, column=0, columnspan=2)
 
+# Borrar un usuario por DNI
 def borrarMiembro():
     def borrar():
         dni = entry_dni.get()
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
+
+        verificarArchivoUsuarios()
         
         try:
             with open('usuarios.json', 'r') as archivo:
@@ -102,18 +116,23 @@ def borrarMiembro():
     entry_dni.pack()
     tk.Button(ventana_borrar, text="Borrar", command=borrar).pack()
 
+# Listar usuarios por rol
 def listarMiembros():
     def mostrarLista():
         rol = entry_rol.get()
         if rol not in ['1', '2']:
             messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
+
+        verificarArchivoUsuarios()
         
         try:
             with open('usuarios.json', 'r') as archivo:
                 usuarioDiccionario = json.load(archivo)
         except FileNotFoundError:
             usuarioDiccionario = []
+
+        lista_usuarios.delete(0, tk.END)  # Limpiar lista antes de mostrar nueva consulta
 
         for usuario in usuarioDiccionario:
             if int(rol) == usuario["rol"]:
@@ -136,6 +155,7 @@ def listarMiembros():
 
     tk.Button(ventana_listar, text="Mostrar", command=mostrarLista).pack()
 
+# Buscar usuario por DNI
 def buscarMiembro():
     def buscar():
         dni = entry_dni.get()
@@ -143,6 +163,8 @@ def buscarMiembro():
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
 
+        verificarArchivoUsuarios()
+        
         try:
             with open('usuarios.json', 'r') as archivo:
                 usuarioDiccionario = json.load(archivo)

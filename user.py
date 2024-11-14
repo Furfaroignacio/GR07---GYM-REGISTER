@@ -75,7 +75,6 @@ def editarPerfil(dni):
     
     messagebox.showinfo("Perfil actualizado", "El perfil ha sido actualizado exitosamente.")
 
-# Inscribirse a un curso
 def inscribirseCurso(dni):
     cursos = [
         ["Crossfit", 7000],
@@ -90,7 +89,11 @@ def inscribirseCurso(dni):
     curso_nombres = [f"{curso[0]} - ${curso[1]}" for curso in cursos]
     opcion = simpledialog.askinteger("Inscribirse en Curso", f"Selecciona el número del curso:\n" + "\n".join([f"{i + 1}. {curso}" for i, curso in enumerate(curso_nombres)]))
 
-    if opcion and 1 <= opcion <= len(cursos):
+    # Verifica si se seleccionó una opción válida o si se canceló
+    if opcion is None:
+        return  # Salir de la función si se presionó "Cancelar"
+    
+    if 1 <= opcion <= len(cursos):
         curso_seleccionado = cursos[opcion - 1]
         messagebox.showinfo("Inscripción exitosa", f"Te has inscrito en {curso_seleccionado[0]}. Generando factura...")
         generarFactura(dni, curso_seleccionado)
@@ -98,16 +101,23 @@ def inscribirseCurso(dni):
     else:
         messagebox.showerror("Error", "Selección inválida.")
 
+
 # Generar factura
 def generarFactura(dni, curso):
     n = random.randint(1000, 9999)
-    with open(f"facturas/factura_{n}_{dni}.txt", 'w') as factura:
-        factura.write(f"Factura para el DNI: {dni}\n")
-        factura.write(f"Curso: {curso[0]}\n")
-        factura.write(f"Total a pagar: ${curso[1]}\n")
-        factura.write(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    factura_detalle = (
+        f"Factura para el DNI: {dni}\n"
+        f"Curso: {curso[0]}\n"
+        f"Total a pagar: ${curso[1]}\n"
+        f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    )
     
-    messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.txt")
+    # Guardar factura en archivo
+    with open(f"facturas/factura_{n}_{dni}.txt", 'w') as factura:
+        factura.write(factura_detalle)
+    
+    # Mostrar la factura en un messagebox
+    messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.txt\n\n{factura_detalle}")
 
 # Agregar curso al perfil
 def agregarCursoAlPerfil(dni, curso):
@@ -132,4 +142,3 @@ def agregarCursoAlPerfil(dni, curso):
         json.dump(usuarios, archivo, indent=4)
 
     messagebox.showinfo("Curso agregado", f"El curso {curso[0]} ha sido agregado a tu perfil.")
-

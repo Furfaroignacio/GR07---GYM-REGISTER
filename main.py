@@ -4,6 +4,7 @@ from tkinter import messagebox
 from user import verPerfil, editarPerfil, inscribirseCurso
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 
+
 def obtenerDNI():
     def validarDNI():
         dni_input = entry_dni.get()
@@ -23,11 +24,19 @@ def obtenerDNI():
     
     ventana_dni = tk.Tk()
     ventana_dni.title("Iniciar sesión")
+    ventana_dni.geometry("300x150")
+    ventana_dni.resizable(False, False)
+    centrar_ventana(ventana_dni, 300, 150)
     
-    tk.Label(ventana_dni, text="Iniciar sesión con DNI:").pack()
-    entry_dni = tk.Entry(ventana_dni)
-    entry_dni.pack()
-    tk.Button(ventana_dni, text="Ingresar", command=validarDNI).pack()
+    # Interfaz de inicio de sesión
+    frame = tk.Frame(ventana_dni, padx=10, pady=10)
+    frame.pack(expand=True)
+
+    tk.Label(frame, text="Iniciar sesión con DNI:", font=("Arial", 12)).pack(pady=5)
+    entry_dni = tk.Entry(frame, font=("Arial", 12), justify="center")
+    entry_dni.pack(pady=5)
+    tk.Button(frame, text="Ingresar", command=validarDNI, font=("Arial", 10), width=15).pack(pady=10)
+    
     ventana_dni.mainloop()
 
 def validarRol(dni):
@@ -44,37 +53,46 @@ def validarRol(dni):
 def menuUsuario(dniRegistro):
     ventana_usuario = tk.Tk()
     ventana_usuario.title("Menú Usuario")
+    ventana_usuario.geometry("350x250")
+    ventana_usuario.resizable(False, False)
+    centrar_ventana(ventana_usuario, 350, 250)
     
-    def verPerfilUsuario():
-        verPerfil(dniRegistro)
-        
-    def editarPerfilUsuario():
-        editarPerfil(dniRegistro)
-    
-    def inscribirseCursoUsuario():
-        inscribirseCurso(dniRegistro)
-    
-    tk.Label(ventana_usuario, text="Bienvenido al Gimnasio").pack()
-    tk.Button(ventana_usuario, text="Ver mi perfil", command=verPerfilUsuario).pack()
-    tk.Button(ventana_usuario, text="Editar mi perfil", command=editarPerfilUsuario).pack()
-    tk.Button(ventana_usuario, text="Inscribirme a un curso", command=inscribirseCursoUsuario).pack()
-    tk.Button(ventana_usuario, text="Salir", command=ventana_usuario.destroy).pack()
+    frame = tk.Frame(ventana_usuario, padx=10, pady=10)
+    frame.pack(expand=True)
+
+    tk.Label(frame, text="Bienvenido al Gimnasio", font=("Arial", 14, "bold")).pack(pady=10)
+    tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
+
     ventana_usuario.mainloop()
 
 def menuAdministrador():
     ventana_admin = tk.Tk()
     ventana_admin.title("Menú Administrador")
-
-    tk.Label(ventana_admin, text="Bienvenido al sistema de registro de miembros").pack()
+    ventana_admin.geometry("350x300")
+    ventana_admin.resizable(False, False)
+    centrar_ventana(ventana_admin, 350, 300)
     
-    tk.Button(ventana_admin, text="Registrar usuario", command=registrarUsuario).pack()
-    tk.Button(ventana_admin, text="Lista de miembros", command=listarMiembros).pack()
-    tk.Button(ventana_admin, text="Borrar miembro", command=borrarMiembro).pack()
-    tk.Button(ventana_admin, text="Buscar miembro", command=buscarMiembro).pack()
-    tk.Button(ventana_admin, text="Gestionar miembros", command=gestionarMiembro).pack()
-    tk.Button(ventana_admin, text="Salir", command=ventana_admin.destroy).pack()
+    frame = tk.Frame(ventana_admin, padx=10, pady=10)
+    frame.pack(expand=True)
+
+    tk.Label(frame, text="Bienvenido al sistema de registro", font=("Arial", 14, "bold")).pack(pady=10)
+    tk.Button(frame, text="Registrar usuario", command=registrarUsuario, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Lista de miembros", command=listarMiembros, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Borrar miembro", command=borrarMiembro, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Buscar miembro", command=buscarMiembro, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Salir", command=ventana_admin.destroy, font=("Arial", 10), width=25).pack(pady=5)
     
     ventana_admin.mainloop()
+
+def centrar_ventana(ventana, ancho, alto):
+    pantalla_ancho = ventana.winfo_screenwidth()
+    pantalla_alto = ventana.winfo_screenheight()
+    x = (pantalla_ancho // 2) - (ancho // 2)
+    y = (pantalla_alto // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
 def main():
     obtenerDNI()
