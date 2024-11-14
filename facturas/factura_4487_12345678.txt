@@ -1,4 +1,0 @@
-Factura para el DNI: 12345678
-Curso: Pilates
-Total a pagar: $4000
-Fecha: 2024-11-14 10:36:07

@@ -1,13 +1,10 @@
 from datetime import datetime
 import json
 import random
-<<<<<<< HEAD
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-=======
 import tkinter as tk
 from tkinter import messagebox, simpledialog
->>>>>>> bauti
 
 # Validar texto y DNI
 def validarTexto(texto):
@@ -110,28 +107,6 @@ def inscribirseCurso(dni):
 # Generar factura
 def generarFactura(dni, curso):
     n = random.randint(1000, 9999)
-<<<<<<< HEAD
-    
-    # Crear el nombre del archivo PDF
-    pdf_filename = f"facturas/factura_{n}_{dni}.pdf"
-    
-    # Crear un objeto Canvas para el PDF
-    c = canvas.Canvas(pdf_filename, pagesize=letter)
-    
-    # Definir las posiciones y el contenido
-    c.setFont("Helvetica", 12)
-    
-    # Escribir el contenido de la factura
-    c.drawString(100, 750, f"Factura para el DNI: {dni}")
-    c.drawString(100, 730, f"Curso: {curso[0]}")  # nombre del curso
-    c.drawString(100, 710, f"Total a pagar: ${curso[1]}")  # costo del curso
-    c.drawString(100, 690, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    # Guardar el archivo PDF
-    c.save()
-    
-    print(f"Factura generada: {pdf_filename}")
-=======
     factura_detalle = (
         f"Factura para el DNI: {dni}\n"
         f"Curso: {curso[0]}\n"
@@ -145,7 +120,6 @@ def generarFactura(dni, curso):
     
     # Mostrar la factura en un messagebox
     messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.txt\n\n{factura_detalle}")
->>>>>>> bauti
 
 # Agregar curso al perfil
 def agregarCursoAlPerfil(dni, curso):
@@ -169,8 +143,4 @@ def agregarCursoAlPerfil(dni, curso):
     with open('usuarios.json', 'w') as archivo:
         json.dump(usuarios, archivo, indent=4)
 
-<<<<<<< HEAD
-    print(f"El curso {curso[0]} ha sido agregado a tu perfil.")
-=======
     messagebox.showinfo("Curso agregado", f"El curso {curso[0]} ha sido agregado a tu perfil.")
->>>>>>> bauti
