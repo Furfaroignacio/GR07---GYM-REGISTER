@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
     {
         "nombre": "Ignacio",
@@ -38,4 +39,54 @@
         "fecha_registro": "17-10-2024",
         "rol": 2
     }
+=======
+[
+    {
+        "nombre": "Ignacio",
+        "apellido": "Furfaro",
+        "dni": 46582373,
+        "fecha_registro": "23-09-2024",
+        "rol": 2
+    },
+    {
+        "nombre": "Prueba",
+        "apellido": "Prueba",
+        "dni": 12345678,
+        "fecha_registro": "17-10-2024",
+        "rol": 1,
+        "cursos_inscritos": [
+            [
+                "Crossfit",
+                50
+            ],
+            [
+                "Entrenamiento Funcional",
+                45
+            ],
+            [
+                "Boxeo",
+                6000
+            ],
+            [
+                "Pilates",
+                4000
+            ],
+            [
+                "Crossfit",
+                7000
+            ],
+            [
+                "Zumba",
+                2500
+            ]
+        ]
+    },
+    {
+        "nombre": "Julian",
+        "apellido": "Conti",
+        "dni": 44637117,
+        "fecha_registro": "17-10-2024",
+        "rol": 2
+    }
+>>>>>>> bauti
 ]

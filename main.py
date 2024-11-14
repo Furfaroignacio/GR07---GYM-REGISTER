@@ -1,13 +1,42 @@
 import json
-from user import verPerfil, editarPerfil, inscribirseCurso , generarFactura
-from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro, gestionarMiembro
+import tkinter as tk
+from tkinter import messagebox
+from user import verPerfil, editarPerfil, inscribirseCurso
+from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 
 def obtenerDNI():
-    while True:
-        dni_input = input("Iniciar sesión con DNI: ")
+    def validarDNI():
+        dni_input = entry_dni.get()
         if dni_input.isdigit() and len(dni_input) == 8:
-            return int(dni_input)
-        print("DNI inválido, debe contener 8 dígitos numéricos.")
+            dni = int(dni_input)
+            rol = validarRol(dni)
+            if rol is not None:
+                ventana_dni.destroy()
+                if rol == 1:
+                    menuUsuario(dni)
+                elif rol == 2:
+                    menuAdministrador()
+            else:
+                messagebox.showerror("Error", "Usuario no encontrado.")
+        else:
+            messagebox.showerror("Error", "DNI inválido, debe contener 8 dígitos numéricos.")
+    
+    ventana_dni = tk.Tk()
+    ventana_dni.title("Iniciar sesión")
+    ventana_dni.geometry("300x150")
+    ventana_dni.resizable(False, False)
+    centrar_ventana(ventana_dni, 300, 150)
+    
+    # Interfaz de inicio de sesión
+    frame = tk.Frame(ventana_dni, padx=10, pady=10)
+    frame.pack(expand=True)
+
+    tk.Label(frame, text="Iniciar sesión con DNI:", font=("Arial", 12)).pack(pady=5)
+    entry_dni = tk.Entry(frame, font=("Arial", 12), justify="center")
+    entry_dni.pack(pady=5)
+    tk.Button(frame, text="Ingresar", command=validarDNI, font=("Arial", 10), width=15).pack(pady=10)
+    
+    ventana_dni.mainloop()
 
 def validarRol(dni):
     try:
@@ -21,79 +50,51 @@ def validarRol(dni):
     return None
 
 def menuUsuario(dniRegistro):
-    print("\nBienvenido al Gimnasio")
-    while True:
-        print("\nElige una opción:")
-        print("1. Ver mi perfil")
-        print("2. Editar mi perfil")
-        print("3. Inscribirme a un curso")
-        print("0. Salir")
+    ventana_usuario = tk.Tk()
+    ventana_usuario.title("Menú Usuario")
+    ventana_usuario.geometry("350x250")
+    ventana_usuario.resizable(False, False)
+    centrar_ventana(ventana_usuario, 350, 250)
+    
+    frame = tk.Frame(ventana_usuario, padx=10, pady=10)
+    frame.pack(expand=True)
 
-        opcion = input("Introduce una opción: ")
-        if not opcion.isdigit():
-            print("Selecciona una opción correcta.")
-            continue
-        
-        opcion = int(opcion)
-        if opcion == 1:
-            verPerfil(dniRegistro)
-        elif opcion == 2:
-            editarPerfil(dniRegistro)
-        elif opcion == 3:
-            inscribirseCurso(dniRegistro)
-        elif opcion == 0:
-            print("Hasta luego")
-            break
-        else:
-            print("Selecciona una opción correcta.")
+    tk.Label(frame, text="Bienvenido al Gimnasio", font=("Arial", 14, "bold")).pack(pady=10)
+    tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
+
+    ventana_usuario.mainloop()
 
 def menuAdministrador():
-    print("\nBienvenido al sistema de registro de miembros")
-    while True:
-        print("\nElige una opción:")
-        print("1. Registrar usuario")
-        print("2. Lista de miembros")
-        print("3. Borrar miembro")
-        print("4. Buscar miembro")
-        print("5. Gestionar miembros")
-        print("0. Salir")
+    ventana_admin = tk.Tk()
+    ventana_admin.title("Menú Administrador")
+    ventana_admin.geometry("350x300")
+    ventana_admin.resizable(False, False)
+    centrar_ventana(ventana_admin, 350, 300)
+    
+    frame = tk.Frame(ventana_admin, padx=10, pady=10)
+    frame.pack(expand=True)
 
-        opcion = input("Introduce una opción: ")
-        if not opcion.isdigit():
-            print("\nPor favor, introduce un valor numérico.")
-            continue
-        
-        opcion = int(opcion)
-        if opcion == 1:
-            registrarUsuario()
-        elif opcion == 2:
-            listarMiembros()
-        elif opcion == 3:
-            borrarMiembro()
-        elif opcion == 4:
-            buscarMiembro()
-        elif opcion == 5:
-            gestionarMiembro()
-        elif opcion == 0:
-            print("Hasta luego")
-            break
-        else:
-            print("Selecciona una opción correcta.")
+    tk.Label(frame, text="Bienvenido al sistema de registro", font=("Arial", 14, "bold")).pack(pady=10)
+    tk.Button(frame, text="Registrar usuario", command=registrarUsuario, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Lista de miembros", command=listarMiembros, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Borrar miembro", command=borrarMiembro, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Buscar miembro", command=buscarMiembro, font=("Arial", 10), width=25).pack(pady=5)
+    tk.Button(frame, text="Salir", command=ventana_admin.destroy, font=("Arial", 10), width=25).pack(pady=5)
+    
+    ventana_admin.mainloop()
+
+def centrar_ventana(ventana, ancho, alto):
+    pantalla_ancho = ventana.winfo_screenwidth()
+    pantalla_alto = ventana.winfo_screenheight()
+    x = (pantalla_ancho // 2) - (ancho // 2)
+    y = (pantalla_alto // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
 def main():
-    dniRegistro = obtenerDNI()
-    rol = validarRol(dniRegistro)
-    
-    if rol is None:
-        print("Usuario no encontrado.")
-        return
-
-    if rol == 1:
-        menuUsuario(dniRegistro)
-    elif rol == 2:
-        menuAdministrador()
-    else:
-        print("Rol no reconocido.")
+    obtenerDNI()
 
 if __name__ == "__main__":
     main()
