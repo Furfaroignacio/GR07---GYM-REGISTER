@@ -1,6 +1,8 @@
 from datetime import datetime
 import json
 import random
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
@@ -90,15 +92,26 @@ def inscribirseCurso(dni):
     
 def generarFactura(dni, curso):
     n = random.randint(1000, 9999)
-    """Genera una factura en un archivo .txt"""
-    with open(f"facturas/factura_{n}_{dni}.txt", 'w') as factura:
-        factura.write(f"Factura para el DNI: {dni}\n")
-        factura.write(f"Curso: {curso[0]}\n")  #nombre
-        factura.write(f"Total a pagar: ${curso[1]}\n")  #costo
-        factura.write(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     
-    print(f"Factura generada: factura_{dni}.txt")
-
+    # Crear el nombre del archivo PDF
+    pdf_filename = f"facturas/factura_{n}_{dni}.pdf"
+    
+    # Crear un objeto Canvas para el PDF
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    
+    # Definir las posiciones y el contenido
+    c.setFont("Helvetica", 12)
+    
+    # Escribir el contenido de la factura
+    c.drawString(100, 750, f"Factura para el DNI: {dni}")
+    c.drawString(100, 730, f"Curso: {curso[0]}")  # nombre del curso
+    c.drawString(100, 710, f"Total a pagar: ${curso[1]}")  # costo del curso
+    c.drawString(100, 690, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Guardar el archivo PDF
+    c.save()
+    
+    print(f"Factura generada: {pdf_filename}")
 
 def agregarCursoAlPerfil(dni, curso):
     """Agrega el curso seleccionado al perfil del usuario en el archivo JSON en formato de matriz."""
@@ -120,4 +133,3 @@ def agregarCursoAlPerfil(dni, curso):
         json.dump(usuarios, archivo, indent=4)
 
     print(f"El curso {curso[0]} ha sido agregado a tu perfil.")
-

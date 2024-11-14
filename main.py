@@ -2,7 +2,6 @@ import json
 from user import verPerfil, editarPerfil, inscribirseCurso , generarFactura
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro, gestionarMiembro
 
-
 def obtenerDNI():
     while True:
         dni_input = input("Iniciar sesión con DNI: ")
