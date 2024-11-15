@@ -107,19 +107,20 @@ def inscribirseCurso(dni):
 # Generar factura
 def generarFactura(dni, curso):
     n = random.randint(1000, 9999)
-    factura_detalle = (
-        f"Factura para el DNI: {dni}\n"
-        f"Curso: {curso[0]}\n"
-        f"Total a pagar: ${curso[1]}\n"
-        f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-    )
+    pdf_filename = f"facturas/factura_{n}_{dni}.pdf"
+    c = canvas.Canvas(pdf_filename, pagesize=letter)
+    c.setFont("Helvetica", 12)
+
+    # Escribir el contenido de la factura
+    c.drawString(100, 750, f"Factura para el DNI: {dni}")
+    c.drawString(100, 730, f"Curso: {curso[0]}")  # nombre del curso
+    c.drawString(100, 710, f"Total a pagar: ${curso[1]}")  # costo del curso
+    c.drawString(100, 690, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Guardar factura en archivo
-    with open(f"facturas/factura_{n}_{dni}.txt", 'w') as factura:
-        factura.write(factura_detalle)
-    
-    # Mostrar la factura en un messagebox
-    messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.txt\n\n{factura_detalle}")
+    # Guardar el archivo PDF
+    c.save()
+    messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.pdf")
+
 
 # Agregar curso al perfil
 def agregarCursoAlPerfil(dni, curso):

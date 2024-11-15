@@ -31,6 +31,12 @@
         "apellido": "Interfaz",
         "dni": 87654321,
         "fecha_registro": "14-11-2024",
-        "rol": 1
+        "rol": 1,
+        "cursos_inscritos": [
+            [
+                "Pilates",
+                4000
+            ]
+        ]
     }
 ]
