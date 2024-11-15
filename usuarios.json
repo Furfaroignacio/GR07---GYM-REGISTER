@@ -7,8 +7,8 @@
         "rol": 2
     },
     {
-        "nombre": "Prueba",
-        "apellido": "Prueba",
+        "nombre": "prueba",
+        "apellido": "prueba",
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1,
@@ -16,6 +16,10 @@
             [
                 "Spinning",
                 3500
+            ],
+            [
+                "Pilates",
+                4000
             ]
         ]
     },
@@ -44,6 +48,10 @@
             [
                 "Spinning",
                 3500
+            ],
+            [
+                "Yoga",
+                3000
             ]
         ]
     }
