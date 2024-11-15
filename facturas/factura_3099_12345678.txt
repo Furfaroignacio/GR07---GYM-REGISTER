@@ -1,4 +1,0 @@
-Factura para el DNI: 12345678
-Curso: Spinning
-Total a pagar: $3500
-Fecha: 2024-11-14 18:59:44

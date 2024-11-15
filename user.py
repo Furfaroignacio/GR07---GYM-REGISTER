@@ -3,6 +3,7 @@ import json
 import random
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 
@@ -109,15 +110,49 @@ def generarFactura(dni, curso):
     n = random.randint(1000, 9999)
     pdf_filename = f"facturas/factura_{n}_{dni}.pdf"
     c = canvas.Canvas(pdf_filename, pagesize=letter)
-    c.setFont("Helvetica", 12)
 
-    # Escribir el contenido de la factura
-    c.drawString(100, 750, f"Factura para el DNI: {dni}")
-    c.drawString(100, 730, f"Curso: {curso[0]}")  # nombre del curso
-    c.drawString(100, 710, f"Total a pagar: ${curso[1]}")  # costo del curso
-    c.drawString(100, 690, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    # Configuración general
+    c.setFont("Helvetica-Bold", 14)
+    ancho, alto = letter
+
     
-    # Guardar el archivo PDF
+    c.setFillColor(colors.darkblue)
+    c.drawString(100, alto - 100, "Fitness Gym")
+    c.setFont("Helvetica", 10)
+    c.drawString(100, alto - 120, "Factura oficial")
+    c.drawImage("fitnessLogo.jpg", ancho - 200, alto - 150, width=100, height=100)
+    
+    
+    c.setStrokeColor(colors.grey)
+    c.line(50, alto - 140, ancho - 50, alto - 140)
+
+    
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica", 12)
+    c.drawString(100, alto - 160, f"Cliente DNI: {dni}")
+    c.drawString(100, alto - 180, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica", 12)
+    c.drawString(100, alto - 220, "Detalles del curso:")
+    c.setFont("Helvetica", 10)
+    c.drawString(120, alto - 240, f"- Nombre: {curso[0]}")
+    c.drawString(120, alto - 260, f"- Precio: ${curso[1]}")
+
+    
+    c.setFont("Helvetica", 12)
+    c.setFillColor(colors.red)
+    c.drawString(100, alto - 300, f"Total a pagar: ${curso[1]}")
+
+    
+    c.setStrokeColor(colors.grey)
+    c.line(50, 50, ancho - 50, 50)
+    c.setFont("Helvetica", 8)
+    c.setFillColor(colors.black)
+    c.drawString(50, 30, "Gracias por su preferencia - Fitness Gym")
+
+    
     c.save()
     messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.pdf")
 
