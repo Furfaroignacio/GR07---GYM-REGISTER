@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog , filedialog
 import os
 import subprocess
+from customtkinter import *
 
 
 # Validar texto y DNI
@@ -183,34 +184,30 @@ def agregarCursoAlPerfil(dni, curso):
         json.dump(usuarios, archivo, indent=4)
 
     messagebox.showinfo("Curso agregado", f"El curso {curso[0]} ha sido agregado a tu perfil.")
+
+
 def verFacturas(dni):
-    carpeta_facturas = "facturas"  # Carpeta donde se guardan las facturas
+    carpeta_facturas = "facturas"
     if not os.path.exists(carpeta_facturas):
         messagebox.showerror("Error", "La carpeta de facturas no existe.")
         return
 
-    # Buscar archivos que terminan con el DNI
-    archivos_dni = [
-        archivo for archivo in os.listdir(carpeta_facturas)
-        if archivo.endswith(f"_{dni}.pdf")
-    ]
+    archivos_dni = [archivo for archivo in os.listdir(carpeta_facturas) if archivo.endswith(f"_{dni}.pdf")]
 
     if not archivos_dni:
         messagebox.showinfo("Sin facturas", f"No se encontraron facturas asociadas al DNI {dni}.")
         return
 
-    # Mostrar opciones al usuario para abrir una factura
-    opciones = "\n".join([f"{i + 1}. {archivo}" for i, archivo in enumerate(archivos_dni)])
-    seleccion = simpledialog.askinteger(
-        "Ver Facturas",
-        f"Se encontraron las siguientes facturas:\n{opciones}\nSelecciona el número de la factura:"
-    )
+    # Crear una ventana emergente con botones para cada factura
+    ventana_facturas = CTkToplevel()
+    ventana_facturas.title("Seleccionar Factura")
+    ventana_facturas.geometry("300x200")
 
-    if seleccion is None:
-        return  # Salir si el usuario cancela
+    for i, archivo in enumerate(archivos_dni):
+        btn_factura = CTkButton(ventana_facturas, text=f"{archivo}", command=lambda f=archivo: abrirFactura(f))
+        btn_factura.pack(pady=5)
 
-    if 1 <= seleccion <= len(archivos_dni):
-        archivo_seleccionado = os.path.join(carpeta_facturas, archivos_dni[seleccion - 1])
+    def abrirFactura(archivo):
+        archivo_seleccionado = os.path.join(carpeta_facturas, archivo)
         subprocess.Popen([archivo_seleccionado], shell=True)
-    else:
-        messagebox.showerror("Error", "Selección inválida.")
+        ventana_facturas.destroy()
