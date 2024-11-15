@@ -28,9 +28,11 @@ def registrarUsuario():
         apellido = entry_apellido.get()
         dni = entry_dni.get()
 
+        # Validación de texto
         if not validarTexto(nombre) or not validarTexto(apellido):
             messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
             return
+        # Validación de DNI
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
@@ -43,10 +45,12 @@ def registrarUsuario():
         except FileNotFoundError:
             usuarioDiccionario = []
 
+        # Verificar si el DNI ya está registrado
         if any(usuario["dni"] == int(dni) for usuario in usuarioDiccionario):
-            messagebox.showinfo("Info", "El DNI ya está registrado.")
+            messagebox.showinfo("Info", f"El DNI {dni} ya está registrado.")
             return
 
+        # Crear un nuevo usuario
         usuario = {
             "nombre": nombre,
             "apellido": apellido,
@@ -55,13 +59,20 @@ def registrarUsuario():
             "rol": 1  # Por defecto es usuario
         }
 
+        # Añadir el nuevo usuario al archivo JSON
         usuarioDiccionario.append(usuario)
 
         with open('usuarios.json', 'w') as archivo:
             json.dump(usuarioDiccionario, archivo, indent=4)
 
         messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
-        ventana_registro.destroy()
+        ventana_registro.destroy()  # Cerrar la ventana de registro
+        limpiarCampos()  # Limpiar los campos de entrada si es necesario
+
+    def limpiarCampos():
+        entry_nombre.delete(0, tk.END)
+        entry_apellido.delete(0, tk.END)
+        entry_dni.delete(0, tk.END)
 
     ventana_registro = tk.Toplevel()
     ventana_registro.title("Registrar Usuario")
@@ -79,7 +90,7 @@ def registrarUsuario():
     entry_dni.grid(row=2, column=1)
 
     tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=3, column=0, columnspan=2)
-
+    
 # Borrar un usuario por DNI
 def borrarMiembro():
     def borrar():

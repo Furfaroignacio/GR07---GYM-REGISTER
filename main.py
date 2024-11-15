@@ -1,6 +1,7 @@
 import json
 import tkinter as tk
 from tkinter import messagebox
+from customtkinter import * 
 from user import verPerfil, editarPerfil, inscribirseCurso, verFacturas
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
 
@@ -21,21 +22,40 @@ def obtenerDNI():
         else:
             messagebox.showerror("Error", "DNI inválido, debe contener 8 dígitos numéricos.")
     
-    ventana_dni = tk.Tk()
+    # Inicializar la ventana
+    ventana_dni = CTk()  # Usamos customTkinter (CTk) en lugar de tk.Tk
     ventana_dni.title("Iniciar sesión")
-    ventana_dni.geometry("300x150")
+    ventana_dni.geometry("350x200")
     ventana_dni.resizable(False, False)
-    centrar_ventana(ventana_dni, 300, 150)
-    
-    # Interfaz de inicio de sesión
-    frame = tk.Frame(ventana_dni, padx=10, pady=10)
-    frame.pack(expand=True)
+    centrar_ventana(ventana_dni, 350, 200)
 
-    tk.Label(frame, text="Iniciar sesión con DNI:", font=("Arial", 12)).pack(pady=5)
-    entry_dni = tk.Entry(frame, font=("Arial", 12), justify="center")
+    # Frame con diseño de customTkinter
+    frame = CTkFrame(ventana_dni, corner_radius=10, width=300, height=150)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    # Etiqueta de título
+    label_titulo = CTkLabel(
+        frame, text="Iniciar sesión", font=("Helvetica", 14, "bold"), text_color="white"
+    )
+    label_titulo.pack(pady=(10, 5))
+
+    # Entrada de DNI
+    entry_dni = CTkEntry(
+        frame, font=("Arial", 12), width=200, placeholder_text="Ingrese su DNI"
+    )
     entry_dni.pack(pady=5)
-    tk.Button(frame, text="Ingresar", command=validarDNI, font=("Arial", 10), width=15).pack(pady=10)
-    
+
+    # Botón de ingreso
+    btn_ingresar = CTkButton(
+        frame,
+        text="Ingresar",
+        fg_color="#475B5A",  # Color del fondo
+        hover_color="#3A4746",  # Color al pasar el mouse
+        font=("Arial", 12, "bold"),
+        command=validarDNI
+    )
+    btn_ingresar.pack(pady=10)
+
     ventana_dni.mainloop()
 
 def validarRol(dni):
@@ -50,58 +70,103 @@ def validarRol(dni):
     return None
 
 def menuUsuario(dniRegistro):
-    ventana_usuario = tk.Tk()
+    ventana_usuario = CTk()  # Usamos customTkinter (CTk) en lugar de tk.Tk()
     ventana_usuario.title("Menú Usuario")
-    ventana_usuario.geometry("350x300")
+    ventana_usuario.geometry("350x400")
     ventana_usuario.resizable(False, False)
-    centrar_ventana(ventana_usuario, 350, 300)
-    
-    frame = tk.Frame(ventana_usuario, padx=10, pady=10)
-    frame.pack(expand=True)
+    centrar_ventana(ventana_usuario, 350, 400)
 
-    tk.Label(frame, text="Bienvenido al Gimnasio", font=("Arial", 14, "bold")).pack(pady=10)
-    tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Ver mis facturas", command=lambda: verFacturas(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
+    # Frame principal con fondo y bordes redondeados
+    frame = CTkFrame(ventana_usuario, corner_radius=15, width=300, height=300)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
 
-    ventana_usuario.mainloop()
-    ventana_usuario = tk.Tk()
-    ventana_usuario.title("Menú Usuario")
-    ventana_usuario.geometry("350x250")
-    ventana_usuario.resizable(False, False)
-    centrar_ventana(ventana_usuario, 350, 250)
-    
-    frame = tk.Frame(ventana_usuario, padx=10, pady=10)
-    frame.pack(expand=True)
+    # Título de bienvenida
+    label_bienvenida = CTkLabel(
+        frame, text="Bienvenido al Gimnasio", font=("Arial", 16, "bold"), text_color="white"
+    )
+    label_bienvenida.pack(pady=10)
 
-    tk.Label(frame, text="Bienvenido al Gimnasio", font=("Arial", 14, "bold")).pack(pady=10)
-    tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Ver mis facturas", command=lambda: verFacturas(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
+    # Botones de navegación
+    btn_perfil = CTkButton(
+        frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#4CAF50", hover_color="#45a049"
+    )
+    btn_perfil.pack(pady=5)
+
+    btn_editar_perfil = CTkButton(
+        frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#2196F3", hover_color="#1976D2"
+    )
+    btn_editar_perfil.pack(pady=5)
+
+    btn_inscribirse = CTkButton(
+        frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#FF5722", hover_color="#E64A19"
+    )
+    btn_inscribirse.pack(pady=5)
+
+    btn_ver_facturas = CTkButton(
+        frame, text="Ver mis facturas", command=lambda: verFacturas(dniRegistro), font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#9C27B0", hover_color="#8E24AA"
+    )
+    btn_ver_facturas.pack(pady=5)
+
+    btn_salir = CTkButton(
+        frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 12), width=250,
+        height=40, corner_radius=8, fg_color="#9E9E9E", hover_color="#757575"
+    )
+    btn_salir.pack(pady=5)
 
     ventana_usuario.mainloop()
 
 def menuAdministrador():
-    ventana_admin = tk.Tk()
+    ventana_admin = CTk()  # Usamos customTkinter (CTk) en lugar de tk.Tk()
     ventana_admin.title("Menú Administrador")
-    ventana_admin.geometry("350x300")
+    ventana_admin.geometry("350x400")
     ventana_admin.resizable(False, False)
-    centrar_ventana(ventana_admin, 350, 300)
-    
-    frame = tk.Frame(ventana_admin, padx=10, pady=10)
-    frame.pack(expand=True)
+    centrar_ventana(ventana_admin, 350, 400)
 
-    tk.Label(frame, text="Bienvenido al sistema de registro", font=("Arial", 14, "bold")).pack(pady=10)
-    tk.Button(frame, text="Registrar usuario", command=registrarUsuario, font=("Arial", 10), width=25).pack(pady=5)
-    tk.Button(frame, text="Lista de miembros", command=listarMiembros, font=("Arial", 10), width=25).pack(pady=5)
-    tk.Button(frame, text="Borrar miembro", command=borrarMiembro, font=("Arial", 10), width=25).pack(pady=5)
-    tk.Button(frame, text="Buscar miembro", command=buscarMiembro, font=("Arial", 10), width=25).pack(pady=5)
-    tk.Button(frame, text="Salir", command=ventana_admin.destroy, font=("Arial", 10), width=25).pack(pady=5)
-    
+    # Frame principal con fondo y bordes redondeados
+    frame = CTkFrame(ventana_admin, corner_radius=15, width=300, height=300)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    # Título de bienvenida
+    label_bienvenida = CTkLabel(
+        frame, text="Bienvenido al sistema de registro", font=("Arial", 16, "bold"), text_color="white"
+    )
+    label_bienvenida.pack(pady=10)
+
+    # Botones de administración
+    btn_registrar_usuario = CTkButton(
+        frame, text="Registrar usuario", command=registrarUsuario, font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#4CAF50", hover_color="#45a049"
+    )
+    btn_registrar_usuario.pack(pady=5)
+
+    btn_lista_miembros = CTkButton(
+        frame, text="Lista de miembros", command=listarMiembros, font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#2196F3", hover_color="#1976D2"
+    )
+    btn_lista_miembros.pack(pady=5)
+
+    btn_borrar_miembro = CTkButton(
+        frame, text="Borrar miembro", command=borrarMiembro, font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#FF5722", hover_color="#E64A19"
+    )
+    btn_borrar_miembro.pack(pady=5)
+
+    btn_buscar_miembro = CTkButton(
+        frame, text="Buscar miembro", command=buscarMiembro, font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#9C27B0", hover_color="#8E24AA"
+    )
+    btn_buscar_miembro.pack(pady=5)
+
+    btn_salir = CTkButton(
+        frame, text="Salir", command=ventana_admin.destroy, font=("Arial", 12),
+        width=250, height=40, corner_radius=8, fg_color="#9E9E9E", hover_color="#757575"
+    )
+    btn_salir.pack(pady=5)
+
     ventana_admin.mainloop()
 
 def centrar_ventana(ventana, ancho, alto):
