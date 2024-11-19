@@ -34,7 +34,7 @@ Este proyecto es un sistema de administración de un gimnasio desarrollado en **
 
 ---
 
-## Testing 🛠️
+## Testing ✅
 
 - Nombre de la branch: **testing**
 - Librerías necesarias (instalar con `pip`):
