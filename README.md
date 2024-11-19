@@ -34,5 +34,14 @@ Este proyecto es un sistema de administración de un gimnasio desarrollado en **
 
 ---
 
+## Testing 🛠️
 
+- Nombre de la branch: **testing**
+- Librerías necesarias (instalar con `pip`):
+  - `test_main.py` 
+  - `test_user.py` 
+
+Pruebas relacionadas a nuestras funciones de validacion. 
+
+---
 
