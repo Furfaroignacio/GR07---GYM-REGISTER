@@ -124,7 +124,7 @@ def generarFactura(dni, curso):
     c.drawString(100, alto - 100, "Fitness Gym")
     c.setFont("Helvetica", 10)
     c.drawString(100, alto - 120, "Factura oficial")
-    c.drawImage("fitnessLogo.jpg", ancho - 200, alto - 150, width=100, height=100)
+    c.drawImage("logo/fitnessLogo.jpg", ancho - 200, alto - 150, width=100, height=100)
     
     
     c.setStrokeColor(colors.grey)
