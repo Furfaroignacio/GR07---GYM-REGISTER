@@ -12,7 +12,12 @@
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1,
-        "cursos_inscritos": []
+        "cursos_inscritos": [
+            [
+                "Boxeo",
+                6000
+            ]
+        ]
     },
     {
         "nombre": "Julian",
