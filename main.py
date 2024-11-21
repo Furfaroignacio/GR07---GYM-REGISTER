@@ -1,9 +1,8 @@
 import json
 import tkinter as tk
 from tkinter import messagebox
-from user import verPerfil, editarPerfil, inscribirseCurso
+from user import verPerfil, editarPerfil, inscribirseCurso, verFacturas
 from admin import registrarUsuario, listarMiembros, borrarMiembro, buscarMiembro
-
 
 def obtenerDNI():
     def validarDNI():
@@ -53,9 +52,9 @@ def validarRol(dni):
 def menuUsuario(dniRegistro):
     ventana_usuario = tk.Tk()
     ventana_usuario.title("Menú Usuario")
-    ventana_usuario.geometry("350x250")
+    ventana_usuario.geometry("350x300")
     ventana_usuario.resizable(False, False)
-    centrar_ventana(ventana_usuario, 350, 250)
+    centrar_ventana(ventana_usuario, 350, 300)
     
     frame = tk.Frame(ventana_usuario, padx=10, pady=10)
     frame.pack(expand=True)
@@ -64,6 +63,7 @@ def menuUsuario(dniRegistro):
     tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
     tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
     tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
+    tk.Button(frame, text="Ver mis facturas", command=lambda: verFacturas(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
     tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
 
     ventana_usuario.mainloop()
