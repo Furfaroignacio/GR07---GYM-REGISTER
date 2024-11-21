@@ -7,8 +7,8 @@
         "rol": 2
     },
     {
-        "nombre": "Prueba",
-        "apellido": "Expo",
+        "nombre": "Probando",
+        "apellido": "Apellido",
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1,
@@ -16,6 +16,10 @@
             [
                 "Boxeo",
                 6000
+            ],
+            [
+                "Crossfit",
+                7000
             ]
         ]
     },
@@ -28,7 +32,7 @@
     },
     {
         "nombre": "Prueba",
-        "apellido": "Interfaz",
+        "apellido": "Edicion",
         "dni": 87654321,
         "fecha_registro": "14-11-2024",
         "rol": 1,
