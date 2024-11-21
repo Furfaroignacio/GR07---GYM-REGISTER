@@ -12,6 +12,10 @@ def validarDNI(dni):
     """Valida que el DNI sea un número de 8 dígitos."""
     return dni.isdigit() and len(dni) == 8
 
+def validarRol(rol):
+    """Valida que el rol sea 1 o 2."""
+    return rol in [1, 2]
+
 def verificarArchivoUsuarios():
     """Crea el archivo `usuarios.json` si no existe."""
     try:
@@ -27,12 +31,16 @@ def registrarUsuario():
         nombre = entry_nombre.get()
         apellido = entry_apellido.get()
         dni = entry_dni.get()
+        rol = entry_rol.get()
 
         if not validarTexto(nombre) or not validarTexto(apellido):
             messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
             return
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
+            return
+        if not validarRol(int(rol)):
+            messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
         
         verificarArchivoUsuarios()
@@ -52,7 +60,7 @@ def registrarUsuario():
             "apellido": apellido,
             "dni": int(dni),
             "fecha_registro": datetime.now().strftime("%d-%m-%Y"),
-            "rol": 1  # Por defecto es usuario
+            "rol": int(rol), # Por defecto es usuario
         }
 
         usuarioDiccionario.append(usuario)
@@ -78,7 +86,11 @@ def registrarUsuario():
     entry_dni = tk.Entry(ventana_registro)
     entry_dni.grid(row=2, column=1)
 
-    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=3, column=0, columnspan=2)
+    tk.Label(ventana_registro, text="ROL:").grid(row=3, column=0)
+    entry_rol = tk.Entry(ventana_registro)
+    entry_rol.grid(row=3, column=1)
+
+    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=4, column=0, columnspan=2)
 
 # Borrar un usuario por DNI
 def borrarMiembro():
