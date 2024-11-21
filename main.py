@@ -67,23 +67,6 @@ def menuUsuario(dniRegistro):
     tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
 
     ventana_usuario.mainloop()
-    ventana_usuario = tk.Tk()
-    ventana_usuario.title("Menú Usuario")
-    ventana_usuario.geometry("350x250")
-    ventana_usuario.resizable(False, False)
-    centrar_ventana(ventana_usuario, 350, 250)
-    
-    frame = tk.Frame(ventana_usuario, padx=10, pady=10)
-    frame.pack(expand=True)
-
-    tk.Label(frame, text="Bienvenido al Gimnasio", font=("Arial", 14, "bold")).pack(pady=10)
-    tk.Button(frame, text="Ver mi perfil", command=lambda: verPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Editar mi perfil", command=lambda: editarPerfil(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Inscribirme a un curso", command=lambda: inscribirseCurso(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Ver mis facturas", command=lambda: verFacturas(dniRegistro), font=("Arial", 10), width=20).pack(pady=5)
-    tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
-
-    ventana_usuario.mainloop()
 
 def menuAdministrador():
     ventana_admin = tk.Tk()
