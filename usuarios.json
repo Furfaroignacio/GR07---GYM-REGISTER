@@ -7,23 +7,15 @@
         "rol": 2
     },
     {
-        "nombre": "prueba",
-        "apellido": "prueba",
+        "nombre": "Prueba",
+        "apellido": "Expo",
         "dni": 12345678,
         "fecha_registro": "17-10-2024",
         "rol": 1,
         "cursos_inscritos": [
             [
-                "Spinning",
-                3500
-            ],
-            [
-                "Pilates",
-                4000
-            ],
-            [
-                "Pilates",
-                4000
+                "Boxeo",
+                6000
             ]
         ]
     },
@@ -40,23 +32,6 @@
         "dni": 87654321,
         "fecha_registro": "14-11-2024",
         "rol": 1,
-        "cursos_inscritos": [
-            [
-                "Pilates",
-                4000
-            ],
-            [
-                "Zumba",
-                2500
-            ],
-            [
-                "Spinning",
-                3500
-            ],
-            [
-                "Yoga",
-                3000
-            ]
-        ]
+        "cursos_inscritos": []
     }
 ]

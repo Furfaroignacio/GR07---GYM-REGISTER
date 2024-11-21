@@ -3,14 +3,18 @@ import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
 
-# Validaciones básicas
+# Validar que se solo texto
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
     return texto.isalpha()
-
+#el dni contenga 8 digitos
 def validarDNI(dni):
     """Valida que el DNI sea un número de 8 dígitos."""
     return dni.isdigit() and len(dni) == 8
+#rol 1 o 2
+def validarRol(rol):
+    """Valida que el rol sea 1 o 2."""
+    return rol in [1, 2]
 
 def verificarArchivoUsuarios():
     """Crea el archivo `usuarios.json` si no existe."""
@@ -21,18 +25,22 @@ def verificarArchivoUsuarios():
         with open('usuarios.json', 'w') as archivo:
             json.dump([], archivo)
 
-# Registrar un nuevo usuario
+#agregar un usuario
 def registrarUsuario():
     def guardarUsuario():
         nombre = entry_nombre.get()
         apellido = entry_apellido.get()
         dni = entry_dni.get()
+        rol = entry_rol.get()
 
         if not validarTexto(nombre) or not validarTexto(apellido):
             messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
             return
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
+            return
+        if not validarRol(int(rol)):
+            messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
         
         verificarArchivoUsuarios()
@@ -52,8 +60,8 @@ def registrarUsuario():
             "apellido": apellido,
             "dni": int(dni),
             "fecha_registro": datetime.now().strftime("%d-%m-%Y"),
-            "rol": 1  # Por defecto es usuario
-        }
+            "rol": int(rol), 
+        } #rol predeterminado
 
         usuarioDiccionario.append(usuario)
 
@@ -65,7 +73,7 @@ def registrarUsuario():
 
     ventana_registro = tk.Toplevel()
     ventana_registro.title("Registrar Usuario")
-
+#tkinter
     tk.Label(ventana_registro, text="Nombre:").grid(row=0, column=0)
     entry_nombre = tk.Entry(ventana_registro)
     entry_nombre.grid(row=0, column=1)
@@ -78,9 +86,13 @@ def registrarUsuario():
     entry_dni = tk.Entry(ventana_registro)
     entry_dni.grid(row=2, column=1)
 
-    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=3, column=0, columnspan=2)
+    tk.Label(ventana_registro, text="ROL:").grid(row=3, column=0)
+    entry_rol = tk.Entry(ventana_registro)
+    entry_rol.grid(row=3, column=1)
 
-# Borrar un usuario por DNI
+    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=4, column=0, columnspan=2)
+
+# borrar usuario
 def borrarMiembro():
     def borrar():
         dni = entry_dni.get()
@@ -116,7 +128,7 @@ def borrarMiembro():
     entry_dni.pack()
     tk.Button(ventana_borrar, text="Borrar", command=borrar).pack()
 
-# Listar usuarios por rol
+# mostrar miembros
 def listarMiembros():
     def mostrarLista():
         rol = entry_rol.get()
@@ -155,7 +167,7 @@ def listarMiembros():
 
     tk.Button(ventana_listar, text="Mostrar", command=mostrarLista).pack()
 
-# Buscar usuario por DNI
+# buscar usuario mediante DNI
 def buscarMiembro():
     def buscar():
         dni = entry_dni.get()
