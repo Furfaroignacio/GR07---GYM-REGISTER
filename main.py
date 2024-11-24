@@ -4,9 +4,8 @@ import datetime
 from tkinter import messagebox
 from user import verPerfil, editarPerfil, inscribirseCurso, verFacturas
 from admin import administrarRoles, listarMiembros, borrarMiembro, buscarMiembro
-
-
-
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 # Función para centrar ventanas
 def centrar_ventana(ventana, ancho, alto):
@@ -39,7 +38,7 @@ def ventanaInicio():
         ventana_inicio.destroy()
         ventanaRegistro()
 
-    ventana_inicio = tk.Tk()
+    ventana_inicio = ttk.Window(themename="darkly")
     ventana_inicio.title("Bienvenido al Gimnasio")
     ventana_inicio.geometry("300x200")
     centrar_ventana(ventana_inicio, 400, 300)
