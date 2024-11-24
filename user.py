@@ -11,6 +11,7 @@ import subprocess
 from customtkinter import *
 
 
+
 # Validar texto y DNI
 def validarTexto(texto):
     return texto.isalpha()
@@ -211,3 +212,4 @@ def verFacturas(dni):
         archivo_seleccionado = os.path.join(carpeta_facturas, archivo)
         subprocess.Popen([archivo_seleccionado], shell=True)
         ventana_facturas.destroy()
+

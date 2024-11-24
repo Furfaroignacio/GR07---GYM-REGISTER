@@ -25,24 +25,18 @@ def verificarArchivoUsuarios():
         with open('usuarios.json', 'w') as archivo:
             json.dump([], archivo)
 
-# Registrar un nuevo usuario
-def registrarUsuario():
-    def guardarUsuario():
-        nombre = entry_nombre.get()
-        apellido = entry_apellido.get()
+def administrarRoles():
+    def cambiarRol():
         dni = entry_dni.get()
         rol = entry_rol.get()
 
-        if not validarTexto(nombre) or not validarTexto(apellido):
-            messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
-            return
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
         if not validarRol(int(rol)):
             messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
-        
+
         verificarArchivoUsuarios()
         
         try:
@@ -51,46 +45,33 @@ def registrarUsuario():
         except FileNotFoundError:
             usuarioDiccionario = []
 
-        if any(usuario["dni"] == int(dni) for usuario in usuarioDiccionario):
-            messagebox.showinfo("Info", "El DNI ya está registrado.")
-            return
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == int(dni):
+                usuario["rol"] = int(rol)
+                with open('usuarios.json', 'w') as archivo:
+                    json.dump(usuarioDiccionario, archivo, indent=4)
+                messagebox.showinfo("Éxito", "Rol cambiado con éxito.")
+                ventana_roles.destroy()
+                return
 
-        usuario = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "dni": int(dni),
-            "fecha_registro": datetime.now().strftime("%d-%m-%Y"),
-            "rol": int(rol), # Por defecto es usuario
-        }
+        messagebox.showinfo("Info", "Usuario no encontrado.")
+        ventana_roles.destroy()
 
-        usuarioDiccionario.append(usuario)
+    ventana_roles = tk.Toplevel()
+    ventana_roles.title("Administrar Roles")
 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
+    tk.Label(ventana_roles, text="DNI del miembro a modificar:").pack()
+    entry_dni = tk.Entry(ventana_roles)
+    entry_dni.pack()
 
-        messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
-        ventana_registro.destroy()
+    tk.Label(ventana_roles, text="Nuevo rol (1 para usuario, 2 para admin):").pack()
+    entry_rol = tk.Entry(ventana_roles)
+    entry_rol.pack()
 
-    ventana_registro = tk.Toplevel()
-    ventana_registro.title("Registrar Usuario")
+    tk.Button(ventana_roles, text="Cambiar Rol", command=cambiarRol).pack()
 
-    tk.Label(ventana_registro, text="Nombre:").grid(row=0, column=0)
-    entry_nombre = tk.Entry(ventana_registro)
-    entry_nombre.grid(row=0, column=1)
 
-    tk.Label(ventana_registro, text="Apellido:").grid(row=1, column=0)
-    entry_apellido = tk.Entry(ventana_registro)
-    entry_apellido.grid(row=1, column=1)
-
-    tk.Label(ventana_registro, text="DNI:").grid(row=2, column=0)
-    entry_dni = tk.Entry(ventana_registro)
-    entry_dni.grid(row=2, column=1)
-
-    tk.Label(ventana_registro, text="ROL:").grid(row=3, column=0)
-    entry_rol = tk.Entry(ventana_registro)
-    entry_rol.grid(row=3, column=1)
-
-    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=4, column=0, columnspan=2)
+    
 
 # Borrar un usuario por DNI
 def borrarMiembro():
