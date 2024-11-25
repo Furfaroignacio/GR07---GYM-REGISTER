@@ -25,6 +25,10 @@ def obtenerDNI():
     ventana_dni.title("Iniciar sesión")
     ventana_dni.geometry("300x150")
     ventana_dni.resizable(False, False)
+
+    # Agregar icono a la ventana
+    ventana_dni.iconbitmap(r"C:\Users\Usuario\Pictures\logogim.ico")  # Asegúrate de que el archivo icono.ico esté en la misma carpeta que tu script
+    
     centrar_ventana(ventana_dni, 300, 150)
     
     # Interfaz de inicio de sesión
@@ -54,6 +58,10 @@ def menuUsuario(dniRegistro):
     ventana_usuario.title("Menú Usuario")
     ventana_usuario.geometry("350x300")
     ventana_usuario.resizable(False, False)
+
+    # Agregar icono a la ventana
+    ventana_usuario.iconbitmap(r"C:\Users\Usuario\Pictures\logogim.ico")
+
     centrar_ventana(ventana_usuario, 350, 300)
     
     frame = tk.Frame(ventana_usuario, padx=10, pady=10)
@@ -73,6 +81,10 @@ def menuAdministrador():
     ventana_admin.title("Menú Administrador")
     ventana_admin.geometry("350x300")
     ventana_admin.resizable(False, False)
+
+    # Agregar icono a la ventana
+    ventana_admin.iconbitmap(r"C:\Users\Usuario\Pictures\logogim.ico")
+
     centrar_ventana(ventana_admin, 350, 300)
     
     frame = tk.Frame(ventana_admin, padx=10, pady=10)
