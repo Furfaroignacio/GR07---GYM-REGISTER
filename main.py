@@ -40,7 +40,7 @@ def ventanaInicio():
 
     ventana_inicio = ttk.Window(themename="darkly")
     ventana_inicio.title("Bienvenido al Gimnasio")
-    ventana_inicio.geometry("300x200")
+    ventana_inicio.geometry("400x300")
     centrar_ventana(ventana_inicio, 400, 300)
 
     frame = tk.Frame(ventana_inicio, padx=10, pady=10)
@@ -73,7 +73,11 @@ def ventanaRegistro():
         else:
             messagebox.showerror("Error", "Datos inválidos. Verifique el nombre y el DNI.")
 
-    ventana_registro = tk.Tk()
+    def regresar():
+        ventana_registro.destroy()
+        ventanaInicio()
+
+    ventana_registro = ttk.Window(themename="darkly")
     ventana_registro.title("Registro de Usuario")
     ventana_registro.geometry("500x500")
     centrar_ventana(ventana_registro, 500, 500)
@@ -92,6 +96,7 @@ def ventanaRegistro():
     entry_dni = tk.Entry(frame)
     entry_dni.pack(fill="x", pady=5)
     tk.Button(frame, text="Registrar", command=registrarNuevoUsuario, font=("Arial", 12), width=15).pack(pady=10)
+    tk.Button(frame, text="Regresar", command=regresar, font=("Arial", 12), width=15).pack(pady=10)
 
     ventana_registro.mainloop()
 
@@ -111,10 +116,14 @@ def obtenerDNI():
         else:
             messagebox.showerror("Error", "DNI inválido, debe contener 8 dígitos numéricos.")
 
-    ventana_dni = tk.Tk()
+    def regresar():
+        ventana_dni.destroy()
+        ventanaInicio()
+
+    ventana_dni = ttk.Window(themename="darkly")
     ventana_dni.title("Iniciar sesión")
-    ventana_dni.geometry("300x150")
-    centrar_ventana(ventana_dni, 300, 150)
+    ventana_dni.geometry("300x200")
+    centrar_ventana(ventana_dni, 300, 200)
 
     frame = tk.Frame(ventana_dni, padx=10, pady=10)
     frame.pack(expand=True)
@@ -123,6 +132,7 @@ def obtenerDNI():
     entry_dni = tk.Entry(frame, font=("Arial", 12), justify="center")
     entry_dni.pack(pady=5)
     tk.Button(frame, text="Ingresar", command=validarDNI, font=("Arial", 10), width=15).pack(pady=10)
+    tk.Button(frame, text="Regresar", command=regresar, font=("Arial", 10), width=15).pack(pady=10)
 
     ventana_dni.mainloop()
 
@@ -137,7 +147,7 @@ def validarRol(dni):
 # Menú para usuarios
 def menuUsuario(dniRegistro):
     rol_usuario = validarRol(dniRegistro)  # Obtener el rol del usuario
-    ventana_usuario = tk.Tk()
+    ventana_usuario = ttk.Window(themename="darkly")
     ventana_usuario.title("Menú Usuario")
     ventana_usuario.geometry("350x350")
     centrar_ventana(ventana_usuario, 350, 350)
@@ -161,7 +171,7 @@ def menuUsuario(dniRegistro):
 
 # Menú para administradores
 def menuAdministrador():
-    ventana_admin = tk.Tk()
+    ventana_admin = ttk.Window(themename="darkly")
     ventana_admin.title("Menú Administrador")
     ventana_admin.geometry("350x300")
     centrar_ventana(ventana_admin, 350, 300)
