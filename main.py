@@ -166,6 +166,7 @@ def menuUsuario(dniRegistro):
         tk.Button(frame, text="Opciones de Administrador", command=menuAdministrador, font=("Arial", 10), width=20).pack(pady=5)
 
     tk.Button(frame, text="Salir", command=ventana_usuario.destroy, font=("Arial", 10), width=20).pack(pady=5)
+    
 
     ventana_usuario.mainloop()
 
