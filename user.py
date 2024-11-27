@@ -82,7 +82,7 @@ def editarPerfil(dni):
         json.dump(usuarios, archivo, indent=4)
     
     messagebox.showinfo("Perfil actualizado", "El perfil ha sido actualizado exitosamente.")
-
+#CURSOS
 def inscribirseCurso(dni):
     cursos = [
         ["Crossfit", 7000],
