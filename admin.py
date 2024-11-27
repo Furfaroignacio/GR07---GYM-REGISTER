@@ -60,6 +60,7 @@ def administrarRoles():
         ventana_roles.destroy()
 
     ventana_roles = tk.Toplevel()
+    ventana_roles.iconbitmap("gym.ico")
     ventana_roles.title("Administrar Roles")
 
     tk.Label(ventana_roles, text="DNI del miembro a modificar:").pack()
@@ -104,6 +105,7 @@ def borrarMiembro():
         ventana_borrar.destroy()
 
     ventana_borrar = tk.Toplevel()
+    ventana_borrar.iconbitmap("gym.ico")
     ventana_borrar.title("Borrar Miembro")
 
     tk.Label(ventana_borrar, text="DNI del miembro a borrar:").pack()
@@ -152,6 +154,7 @@ def listarMiembros():
         mostrarLista(usuarios_filtrados)
 
     ventana_listar = ttk.Toplevel()
+    ventana_listar.iconbitmap("gym.ico")
     ventana_listar.title("Listar Miembros")
 
     ttk.Label(ventana_listar, text="Rol (1 para usuario, 2 para admin):").pack(pady=5)
@@ -201,6 +204,7 @@ def buscarMiembro():
         ventana_buscar.destroy()
 
     ventana_buscar = tk.Toplevel()
+    ventana_buscar.iconbitmap("gym.ico")
     ventana_buscar.title("Buscar Miembro")
 
     tk.Label(ventana_buscar, text="DNI del miembro a buscar:").pack()
