@@ -195,7 +195,7 @@ def menuAdministrador():
 
     ventana_admin.mainloop()
 
-# Función principal
+# FUNCION PRINCIPAL
 def main():
     ventanaInicio()
 
