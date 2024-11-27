@@ -28,7 +28,7 @@ def guardar_datos(usuarios):
     with open('usuarios.json', 'w') as archivo:
         json.dump(usuarios, archivo, indent=4)
 
-ventana_inicio.iconbitmap("gym.ico")
+
 # Ventana de inicio
 def ventanaInicio():
     def iniciarSesion():
@@ -39,11 +39,12 @@ def ventanaInicio():
         ventana_inicio.destroy()
         ventanaRegistro()
 
+    
     ventana_inicio = ttk.Window(themename="darkly")
     ventana_inicio.title("Bienvenido al Gimnasio")
     ventana_inicio.geometry("400x300")
     centrar_ventana(ventana_inicio, 400, 300)
-
+    ventana_inicio.iconbitmap("gym.ico")
     frame = tk.Frame(ventana_inicio, padx=10, pady=10)
     frame.pack(expand=True)
 
