@@ -202,6 +202,7 @@ def verFacturas(dni):
     # Crear una ventana emergente con botones para cada factura
     ventana_facturas = CTkToplevel()
     ventana_facturas.title("Seleccionar Factura")
+    ventana_facturas.iconbitmap("gym.ico")
     ventana_facturas.geometry("300x200")
 
     for i, archivo in enumerate(archivos_dni):
