@@ -186,7 +186,7 @@ def menuAdministrador():
     frame = tk.Frame(ventana_admin, padx=10, pady=10)
     frame.pack(expand=True)
 
-    tk.Label(frame, text="Bienvenido al sistema de registro", font=("Arial", 14, "bold")).pack(pady=10)
+    tk.Label(frame, text="Bienvenido al Menu Administrador", font=("Arial", 14, "bold")).pack(pady=10)
     tk.Button(frame, text="Cambiar Rol", command=administrarRoles , font=("Arial", 10), width=25).pack(pady=5)
     tk.Button(frame, text="Lista de miembros", command=listarMiembros, font=("Arial", 10), width=25).pack(pady=5)
     tk.Button(frame, text="Borrar miembro", command=borrarMiembro, font=("Arial", 10), width=25).pack(pady=5)
