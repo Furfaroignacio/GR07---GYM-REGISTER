@@ -11,6 +11,7 @@ import subprocess
 from customtkinter import *
 
 
+
 # Validar texto y DNI
 def validarTexto(texto):
     return texto.isalpha()
