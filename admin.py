@@ -5,7 +5,7 @@ from datetime import datetime
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-# Validaciones básicas
+# VALIDACIONES
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
     return texto.isalpha()
@@ -76,7 +76,7 @@ def administrarRoles():
 
     
 
-# Borrar un usuario por DNI
+# BORRAR USUARIO MEDIANTE DNI
 def borrarMiembro():
     def borrar():
         dni = entry_dni.get()
@@ -113,7 +113,7 @@ def borrarMiembro():
     entry_dni.pack()
     tk.Button(ventana_borrar, text="Borrar", command=borrar).pack()
 
-# Listar usuarios por rol
+# VER USUARIOS
 def listarMiembros():
     def cargarUsuarios():
         verificarArchivoUsuarios()
@@ -174,7 +174,7 @@ def listarMiembros():
     usuarios = cargarUsuarios()
     mostrarLista(usuarios)
 
-# Buscar usuario por DNI
+# BUSCAR USUARIOS MEDIANTE DNI
 def buscarMiembro():
     def buscar():
         dni = entry_dni.get()
