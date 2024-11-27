@@ -7,7 +7,7 @@ from admin import administrarRoles, listarMiembros, borrarMiembro, buscarMiembro
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
-# Función para centrar ventanas
+# CREAR VENTANA
 def centrar_ventana(ventana, ancho, alto):
     pantalla_ancho = ventana.winfo_screenwidth()
     pantalla_alto = ventana.winfo_screenheight()
@@ -15,7 +15,7 @@ def centrar_ventana(ventana, ancho, alto):
     y = (pantalla_alto // 2) - (alto // 2)
     ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
-# Función para cargar datos del archivo JSON
+# CARGAR DATOS AL JSON
 def cargar_datos():
     try:
         with open('usuarios.json', 'r') as archivo:
@@ -23,13 +23,13 @@ def cargar_datos():
     except FileNotFoundError:
         return []
 
-# Función para guardar datos en el archivo JSON
+# GUARDAR LOS DATOS
 def guardar_datos(usuarios):
     with open('usuarios.json', 'w') as archivo:
         json.dump(usuarios, archivo, indent=4)
 
 
-# Ventana de inicio
+# INICIO VENTANA
 def ventanaInicio():
     def iniciarSesion():
         ventana_inicio.destroy()
@@ -54,7 +54,7 @@ def ventanaInicio():
 
     ventana_inicio.mainloop()
 
-# Ventana de registro
+# VENTANA REGISTRO
 def ventanaRegistro():
     def registrarNuevoUsuario():
         nombre = entry_nombre.get()
@@ -140,7 +140,7 @@ def obtenerDNI():
 
     ventana_dni.mainloop()
 
-# Validar rol de usuario
+# VALIDAR ROL DEL USUARIO
 def validarRol(dni):
     usuarios = cargar_datos()
     for usuario in usuarios:
@@ -148,7 +148,7 @@ def validarRol(dni):
             return usuario['rol']
     return None
 
-# Menú para usuarios
+# MENU DE USUARIOS
 def menuUsuario(dniRegistro):
     rol_usuario = validarRol(dniRegistro)  # Obtener el rol del usuario
     ventana_usuario = ttk.Window(themename="darkly")
@@ -175,7 +175,7 @@ def menuUsuario(dniRegistro):
 
     ventana_usuario.mainloop()
 
-# Menú para administradores
+# MENU DE ADMINISTRADOR
 def menuAdministrador():
     ventana_admin = ttk.Window(themename="darkly")
     ventana_admin.title("Menú Administrador")
