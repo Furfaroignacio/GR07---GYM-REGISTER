@@ -28,6 +28,7 @@ def guardar_datos(usuarios):
     with open('usuarios.json', 'w') as archivo:
         json.dump(usuarios, archivo, indent=4)
 
+ventana_inicio.iconbitmap("gym.ico")
 # Ventana de inicio
 def ventanaInicio():
     def iniciarSesion():
