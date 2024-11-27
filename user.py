@@ -11,6 +11,7 @@ import subprocess
 from customtkinter import *
 
 
+
 # Validar texto y DNI
 def validarTexto(texto):
     return texto.isalpha()
@@ -96,9 +97,9 @@ def inscribirseCurso(dni):
     curso_nombres = [f"{curso[0]} - ${curso[1]}" for curso in cursos]
     opcion = simpledialog.askinteger("Inscribirse en Curso", f"Selecciona el número del curso:\n" + "\n".join([f"{i + 1}. {curso}" for i, curso in enumerate(curso_nombres)]))
 
-    # verificacion 
+    # Verifica si se seleccionó una opción válida o si se canceló
     if opcion is None:
-        return 
+        return  # Salir de la función si se presionó "Cancelar"
     
     if 1 <= opcion <= len(cursos):
         curso_seleccionado = cursos[opcion - 1]
@@ -161,7 +162,7 @@ def generarFactura(dni, curso):
     messagebox.showinfo("Factura generada", f"Factura generada: factura_{n}_{dni}.pdf")
 
 
-# agregar curso al perfil
+# Agregar curso al perfil
 def agregarCursoAlPerfil(dni, curso):
     try:
         with open('usuarios.json', 'r') as archivo:
@@ -198,7 +199,7 @@ def verFacturas(dni):
         messagebox.showinfo("Sin facturas", f"No se encontraron facturas asociadas al DNI {dni}.")
         return
 
-    # crea ventana
+    # Crear una ventana emergente con botones para cada factura
     ventana_facturas = CTkToplevel()
     ventana_facturas.title("Seleccionar Factura")
     ventana_facturas.geometry("300x200")
