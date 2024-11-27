@@ -2,16 +2,18 @@ import json
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
-# Validar que se solo texto
+# Validaciones básicas
 def validarTexto(texto):
     """Valida que el texto contenga solo letras."""
     return texto.isalpha()
-#el dni contenga 8 digitos
+
 def validarDNI(dni):
     """Valida que el DNI sea un número de 8 dígitos."""
     return dni.isdigit() and len(dni) == 8
-#rol 1 o 2
+
 def validarRol(rol):
     """Valida que el rol sea 1 o 2."""
     return rol in [1, 2]
@@ -25,24 +27,18 @@ def verificarArchivoUsuarios():
         with open('usuarios.json', 'w') as archivo:
             json.dump([], archivo)
 
-#agregar un usuario
-def registrarUsuario():
-    def guardarUsuario():
-        nombre = entry_nombre.get()
-        apellido = entry_apellido.get()
+def administrarRoles():
+    def cambiarRol():
         dni = entry_dni.get()
         rol = entry_rol.get()
 
-        if not validarTexto(nombre) or not validarTexto(apellido):
-            messagebox.showerror("Error", "Nombre y apellido deben contener solo letras.")
-            return
         if not validarDNI(dni):
             messagebox.showerror("Error", "DNI inválido, debe tener 8 dígitos.")
             return
         if not validarRol(int(rol)):
             messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
-        
+
         verificarArchivoUsuarios()
         
         try:
@@ -51,48 +47,35 @@ def registrarUsuario():
         except FileNotFoundError:
             usuarioDiccionario = []
 
-        if any(usuario["dni"] == int(dni) for usuario in usuarioDiccionario):
-            messagebox.showinfo("Info", "El DNI ya está registrado.")
-            return
+        for usuario in usuarioDiccionario:
+            if usuario["dni"] == int(dni):
+                usuario["rol"] = int(rol)
+                with open('usuarios.json', 'w') as archivo:
+                    json.dump(usuarioDiccionario, archivo, indent=4)
+                messagebox.showinfo("Éxito", "Rol cambiado con éxito.")
+                ventana_roles.destroy()
+                return
 
-        usuario = {
-            "nombre": nombre,
-            "apellido": apellido,
-            "dni": int(dni),
-            "fecha_registro": datetime.now().strftime("%d-%m-%Y"),
-            "rol": int(rol), 
-        } #rol predeterminado
+        messagebox.showinfo("Info", "Usuario no encontrado.")
+        ventana_roles.destroy()
 
-        usuarioDiccionario.append(usuario)
+    ventana_roles = tk.Toplevel()
+    ventana_roles.title("Administrar Roles")
 
-        with open('usuarios.json', 'w') as archivo:
-            json.dump(usuarioDiccionario, archivo, indent=4)
+    tk.Label(ventana_roles, text="DNI del miembro a modificar:").pack()
+    entry_dni = tk.Entry(ventana_roles)
+    entry_dni.pack()
 
-        messagebox.showinfo("Éxito", "Usuario registrado con éxito.")
-        ventana_registro.destroy()
+    tk.Label(ventana_roles, text="Nuevo rol (1 para usuario, 2 para admin):").pack()
+    entry_rol = tk.Entry(ventana_roles)
+    entry_rol.pack()
 
-    ventana_registro = tk.Toplevel()
-    ventana_registro.title("Registrar Usuario")
-#tkinter
-    tk.Label(ventana_registro, text="Nombre:").grid(row=0, column=0)
-    entry_nombre = tk.Entry(ventana_registro)
-    entry_nombre.grid(row=0, column=1)
+    tk.Button(ventana_roles, text="Cambiar Rol", command=cambiarRol).pack()
 
-    tk.Label(ventana_registro, text="Apellido:").grid(row=1, column=0)
-    entry_apellido = tk.Entry(ventana_registro)
-    entry_apellido.grid(row=1, column=1)
 
-    tk.Label(ventana_registro, text="DNI:").grid(row=2, column=0)
-    entry_dni = tk.Entry(ventana_registro)
-    entry_dni.grid(row=2, column=1)
+    
 
-    tk.Label(ventana_registro, text="ROL:").grid(row=3, column=0)
-    entry_rol = tk.Entry(ventana_registro)
-    entry_rol.grid(row=3, column=1)
-
-    tk.Button(ventana_registro, text="Guardar", command=guardarUsuario).grid(row=4, column=0, columnspan=2)
-
-# borrar usuario
+# Borrar un usuario por DNI
 def borrarMiembro():
     def borrar():
         dni = entry_dni.get()
@@ -128,46 +111,67 @@ def borrarMiembro():
     entry_dni.pack()
     tk.Button(ventana_borrar, text="Borrar", command=borrar).pack()
 
-# mostrar miembros
+# Listar usuarios por rol
 def listarMiembros():
-    def mostrarLista():
+    def cargarUsuarios():
+        verificarArchivoUsuarios()
+        
+        try:
+            with open('usuarios.json', 'r') as archivo:
+                return json.load(archivo)
+        except FileNotFoundError:
+            return []
+
+    def mostrarLista(usuarios):
+        for row in tree.get_children():
+            tree.delete(row)  # Limpiar tabla antes de mostrar nueva consulta
+
+        for usuario in usuarios:
+            tree.insert("", tk.END, values=(
+                usuario['nombre'],
+                usuario['apellido'],
+                usuario['dni'],
+                usuario['fecha_registro'],
+                'Usuario' if usuario['rol'] == 1 else 'Administrador'
+            ))
+
+        # Establecer separaciones entre filas y columnas
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=25)
+        style.configure("Treeview.Heading", borderwidth=1, relief="solid")
+        style.configure("Treeview.Cell", borderwidth=1, relief="solid")
+
+    def filtrarLista():
         rol = entry_rol.get()
         if rol not in ['1', '2']:
             messagebox.showerror("Error", "Rol inválido. Debe ser 1 o 2.")
             return
 
-        verificarArchivoUsuarios()
-        
-        try:
-            with open('usuarios.json', 'r') as archivo:
-                usuarioDiccionario = json.load(archivo)
-        except FileNotFoundError:
-            usuarioDiccionario = []
+        usuarios = cargarUsuarios()
+        usuarios_filtrados = [usuario for usuario in usuarios if int(rol) == usuario["rol"]]
+        mostrarLista(usuarios_filtrados)
 
-        lista_usuarios.delete(0, tk.END)  # Limpiar lista antes de mostrar nueva consulta
-
-        for usuario in usuarioDiccionario:
-            if int(rol) == usuario["rol"]:
-                lista_usuarios.insert(tk.END, f"Nombre: {usuario['nombre']}")
-                lista_usuarios.insert(tk.END, f"Apellido: {usuario['apellido']}")
-                lista_usuarios.insert(tk.END, f"DNI: {usuario['dni']}")
-                lista_usuarios.insert(tk.END, f"Fecha de registro: {usuario['fecha_registro']}")
-                lista_usuarios.insert(tk.END, f"Rol: {'Usuario' if usuario['rol'] == 1 else 'Administrador'}")
-                lista_usuarios.insert(tk.END, "")
-
-    ventana_listar = tk.Toplevel()
+    ventana_listar = ttk.Toplevel()
     ventana_listar.title("Listar Miembros")
 
-    tk.Label(ventana_listar, text="Rol (1 para usuario, 2 para admin):").pack()
-    entry_rol = tk.Entry(ventana_listar)
-    entry_rol.pack()
+    ttk.Label(ventana_listar, text="Rol (1 para usuario, 2 para admin):").pack(pady=5)
+    entry_rol = ttk.Entry(ventana_listar)
+    entry_rol.pack(pady=5)
 
-    lista_usuarios = tk.Listbox(ventana_listar, width=50)
-    lista_usuarios.pack()
+    columns = ("Nombre", "Apellido", "DNI", "Fecha de registro", "Rol")
+    tree = ttk.Treeview(ventana_listar, columns=columns, show="headings")
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=150)
+    tree.pack(pady=10)
 
-    tk.Button(ventana_listar, text="Mostrar", command=mostrarLista).pack()
+    ttk.Button(ventana_listar, text="Filtrar", command=filtrarLista).pack(pady=5)
 
-# buscar usuario mediante DNI
+    # Cargar y mostrar todos los usuarios al iniciar la ventana
+    usuarios = cargarUsuarios()
+    mostrarLista(usuarios)
+
+# Buscar usuario por DNI
 def buscarMiembro():
     def buscar():
         dni = entry_dni.get()
