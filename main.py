@@ -82,6 +82,7 @@ def ventanaRegistro():
     ventana_registro = ttk.Window(themename="darkly")
     ventana_registro.title("Registro de Usuario")
     ventana_registro.geometry("500x500")
+    ventana_registro.iconbitmap("gym.ico")
     centrar_ventana(ventana_registro, 500, 500)
 
     frame = tk.Frame(ventana_registro, padx=10, pady=10)
@@ -125,6 +126,7 @@ def obtenerDNI():
     ventana_dni = ttk.Window(themename="darkly")
     ventana_dni.title("Iniciar sesión")
     ventana_dni.geometry("300x200")
+    ventana_dni.iconbitmap("gym.ico")
     centrar_ventana(ventana_dni, 300, 200)
 
     frame = tk.Frame(ventana_dni, padx=10, pady=10)
@@ -152,6 +154,7 @@ def menuUsuario(dniRegistro):
     ventana_usuario = ttk.Window(themename="darkly")
     ventana_usuario.title("Menú Usuario")
     ventana_usuario.geometry("350x350")
+    ventana_usuario.iconbitmap("gym.ico")
     centrar_ventana(ventana_usuario, 350, 350)
 
     frame = tk.Frame(ventana_usuario, padx=10, pady=10)
@@ -177,6 +180,7 @@ def menuAdministrador():
     ventana_admin = ttk.Window(themename="darkly")
     ventana_admin.title("Menú Administrador")
     ventana_admin.geometry("350x300")
+    ventana_admin.iconbitmap("gym.ico")
     centrar_ventana(ventana_admin, 350, 300)
 
     frame = tk.Frame(ventana_admin, padx=10, pady=10)
